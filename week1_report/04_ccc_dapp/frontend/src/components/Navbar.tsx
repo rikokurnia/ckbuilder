@@ -154,7 +154,7 @@ export function Navbar({ onRefreshFeed }: NavbarProps) {
               className="px-4 py-2 rounded-lg text-xs font-medium cream-btn-primary flex items-center gap-1.5 cursor-pointer"
             >
               <Wallet className="w-3.5 h-3.5" />
-              <span>Connect Wallet (MetaMask / JoyID)</span>
+              <span>Connect Wallet</span>
             </button>
           )}
         </div>

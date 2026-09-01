@@ -164,19 +164,19 @@ export function ConceptCards({ signer, address, tipBlock }: ConceptCardsProps) {
                 <h3>Signer Concept (`ccc.Signer`)</h3>
               </div>
               <p className="text-xs text-[#57534E] leading-relaxed">
-                A **Signer** in CCC encapsulates transaction signing capability across various authenticators: browser extensions (MetaMask, OKX), Passkey/WebAuthn (JoyID), Nostr (NIP-07), or direct Private Keys.
+                A **Signer** in CCC encapsulates cryptographic transaction signing capability across various Web3 authenticators (browser extension wallets, passkeys, or software keys).
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div className="p-3 rounded-xl cream-card-subtle">
-                  <div className="text-[11px] text-[#78716C]">Active Signer Type</div>
+                  <div className="text-[11px] text-[#78716C]">Active Signer Status</div>
                   <div className="text-xs font-semibold text-[#262320] mt-0.5">
-                    {signer ? "Initialized (Active)" : "Disconnected"}
+                    {signer ? "Connected & Ready" : "Disconnected"}
                   </div>
                 </div>
                 <div className="p-3 rounded-xl cream-card-subtle">
-                  <div className="text-[11px] text-[#78716C]">Supported Connectors</div>
+                  <div className="text-[11px] text-[#78716C]">Supported Protocols</div>
                   <div className="text-xs font-semibold text-[#B45309] mt-0.5">
-                    JoyID, OKX, UniSat, PrivKey
+                    Omnilock, WebAuthn Passkey, SECP256K1
                   </div>
                 </div>
               </div>

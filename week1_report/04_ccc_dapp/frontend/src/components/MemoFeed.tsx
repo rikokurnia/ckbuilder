@@ -119,7 +119,7 @@ export function MemoFeed({ refreshKey }: MemoFeedProps) {
         <div className="text-center py-10 px-4 rounded-xl cream-card-subtle space-y-3 border border-dashed border-[#E5DCD0]">
           <Database className="w-8 h-8 text-[#A8A29E] mx-auto" />
           <p className="text-xs text-[#57534E] font-medium">
-            Connect your MetaMask or JoyID wallet to view your on-chain memos.
+            Connect your wallet to view your on-chain memo cells.
           </p>
           <button
             onClick={() => open()}

@@ -87,7 +87,7 @@ export default function Home() {
           </h1>
 
           <p className="text-sm text-[#78716C] leading-relaxed">
-            Connect your <span className="font-semibold text-[#B45309]">MetaMask</span> or JoyID wallet to write immutable messages directly into CKB cell capacity storage while learning the 5 core concepts of CCC:{" "}
+            Interact with the CKB Cell Model to store immutable state in cell capacity while exploring the 5 core architectural concepts of the Common Chain Connector:{" "}
             <span className="font-semibold text-[#B45309]">Client</span>,{" "}
             <span className="font-semibold text-[#B45309]">Address</span>,{" "}
             <span className="font-semibold text-[#B45309]">Signer</span>,{" "}

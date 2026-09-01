@@ -33,7 +33,7 @@ export function WalletProfileCard({ address, balance }: WalletProfileCardProps) 
               Wallet Not Connected
             </h3>
             <p className="text-xs text-[#78716C]">
-              Connect MetaMask or JoyID to view your live CKB Testnet Address and on-chain state.
+              Connect your Web3 wallet to inspect your live on-chain address and cell state.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export function WalletProfileCard({ address, balance }: WalletProfileCardProps) 
           className="px-5 py-2.5 rounded-xl text-xs font-semibold cream-btn-primary flex items-center gap-2 shrink-0 cursor-pointer shadow-md"
         >
           <Wallet className="w-4 h-4" />
-          <span>Connect Wallet (MetaMask / JoyID)</span>
+          <span>Connect Wallet</span>
         </button>
       </div>
     );
@@ -56,7 +56,7 @@ export function WalletProfileCard({ address, balance }: WalletProfileCardProps) 
         <div className="flex items-center gap-2.5">
           <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-xs font-semibold text-[#262320]">
-            Connected via {wallet?.name || "MetaMask / Web3 Signer"}
+            Connected Account ({wallet?.name || "Web3 Signer"})
           </span>
           <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
             CKB Testnet

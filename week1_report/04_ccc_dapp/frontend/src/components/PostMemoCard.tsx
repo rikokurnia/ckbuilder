@@ -25,26 +25,26 @@ export function PostMemoCard({ onMemoPosted }: PostMemoCardProps) {
   const handlePostMemo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!signer) {
-      setError("Please connect your wallet (e.g. MetaMask or JoyID) first.");
+      setError("Please connect your wallet first.");
       open();
       return;
     }
 
     if (!memoText.trim()) {
-      setError("Please enter a memo text to post.");
+      setError("Please enter a memo message to publish.");
       return;
     }
 
     const numCapacity = parseFloat(capacityCkb);
     if (isNaN(numCapacity) || numCapacity < minRequiredCapacity) {
-      setError(`Capacity must be at least ${minRequiredCapacity} CKB to store this memo.`);
+      setError(`Capacity must be at least ${minRequiredCapacity} CKB to allocate this cell.`);
       return;
     }
 
     setError("");
     setTxHash("");
     setLoading(true);
-    setStatusMessage("Assembling CKB transaction and gathering live input cells...");
+    setStatusMessage("Assembling transaction outputs and gathering live input cells...");
 
     try {
       const lock = (await signer.getRecommendedAddressObj()).script;
@@ -60,11 +60,11 @@ export function PostMemoCard({ onMemoPosted }: PostMemoCardProps) {
         outputsData: [memoHex],
       });
 
-      setStatusMessage("Balancing inputs, change cell, and miner fee...");
+      setStatusMessage("Balancing capacity inputs, change output, and network fee...");
       await tx.completeInputsByCapacity(signer);
       await tx.completeFeeBy(signer, 1500n);
 
-      setStatusMessage("Requesting signature from MetaMask / CCC Signer...");
+      setStatusMessage("Requesting transaction signature from signer...");
       const hash = await signer.sendTransaction(tx);
       setTxHash(hash);
       setStatusMessage("Transaction broadcasted! Polling for on-chain block confirmation...");
@@ -263,7 +263,7 @@ export function PostMemoCard({ onMemoPosted }: PostMemoCardProps) {
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                <span>Sign & Broadcast Memo with MetaMask</span>
+                <span>Sign & Broadcast Transaction</span>
               </>
             )}
           </button>
@@ -273,7 +273,7 @@ export function PostMemoCard({ onMemoPosted }: PostMemoCardProps) {
             onClick={() => open()}
             className="w-full py-3 rounded-xl text-xs font-semibold cream-btn-primary flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>Connect Wallet (MetaMask) to Post</span>
+            <span>Connect Wallet to Post</span>
           </button>
         )}
       </form>
