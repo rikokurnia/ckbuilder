@@ -35,6 +35,7 @@ The dApp was executed and validated live on the **CKB Public Testnet (Pudge)**:
 | **On-Chain Payload** | `"CCC Core Concepts Demo: Client, Address, Signer, Cell Model & Transaction"` | Decoded UTF-8 String |
 | **Transaction Fee** | **`0.00037309 CKB`** (37,309 Shannons) | Satisfied 1500 Shannons/KB fee rate |
 | **Cycle Consumption** | `1,626,453 Cycles` (`0x18d155`) | CKB-VM SECP256K1 signature verification |
+| **Faucet Funding Tx** | [`0xd97815391010f3fdb60424872f5281f5be893b5b4e17cb383b47e8c2c55b01b3`](https://pudge.explorer.nervos.org/transaction/0xd97815391010f3fdb60424872f5281f5be893b5b4e17cb383b47e8c2c55b01b3) | 5,000 CKB Testnet transfer (Block `#22,278,237`) |
 
 ---
 
@@ -48,16 +49,16 @@ The `Client` interface acts as the bridge between your application and the under
 
 ### 2. 📫 Concept 2: Address (`ccc.Address`)
 In CKB, addresses are not accounts—they are human-readable Bech32m encodings of a **Lock Script**:
-- **Address Format**: `ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr`
+- **Address Format**: `ckt1qzda...` (Native SECP256K1) or `ckt1qre...` (Omnilock Web3 Signer)
 - **Lock Script Structure**:
-  - `codeHash`: `0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8` (Default SECP256K1 Blake160 system lock)
+  - `codeHash`: Blake2b hash of the compiled lock script bytecode (`0x9bd7...` or `0xf329...`)
   - `hashType`: `"type"`
-  - `args`: `0xc478c338ac607c24a06ba3678dd015dade8dd7e5` (The 20-byte Blake160 public key hash).
+  - `args`: The public key hash / Ethereum address payload.
 
 ### 3. 🔑 Concept 3: Signer (`ccc.Signer`)
 A `Signer` represents an authenticated identity capable of signing raw transaction witnesses:
-- **Multi-Authenticator Support**: CCC provides a modular interface supporting WebAuthn Passkeys (**JoyID**), browser extension wallets (**OKX**, **UniSat**, **MetaMask**), Nostr (**NIP-07**), and direct private keys.
-- **Direct Private Key Signer**: `new ccc.SignerCkbPrivateKey(client, privateKeyHex)` allows automated testing and devnet workflows.
+- **Multi-Authenticator Support**: CCC provides a modular interface supporting WebAuthn Passkeys (**JoyID**), browser extension wallets (**MetaMask**, **OKX**, **UniSat**), Nostr (**NIP-07**), and software keys.
+- **Omnilock Integration**: Automatically signs Ethereum personal messages and maps them to CKB Layer 1 transactions executed inside CKB-VM.
 
 ### 4. 📦 Concept 4: CKB Cell Model & Storage Economics
 In Nervos CKB, state storage is native to the token economy ($1\text{ byte} = 1\text{ CKB}$). Storing data on-chain requires locking sufficient capacity in the cell:
@@ -69,7 +70,7 @@ $$\text{Minimum Capacity} = \text{Base Overhead (61 Bytes)} + \text{Payload Size
 | **`capacity`** | 8 Bytes | 64-bit unsigned integer representing Shannons |
 | **`lock.code_hash`** | 32 Bytes | Blake2b hash of the compiled lock script bytecode |
 | **`lock.hash_type`** | 1 Byte | Byte indicator (`0x00` Data, `0x01` Type, `0x02` Data1, `0x04` Data2) |
-| **`lock.args`** | 20 Bytes | Blake160 public key hash |
+| **`lock.args`** | 20 Bytes | Blake160 public key hash / Ethereum address payload |
 | **`type`** *(Optional)* | 0 or 65 Bytes | Optional Type Script for smart contract governance |
 | **`outputsData`** | $N$ Bytes | Raw UTF-8 bytes of the memo message |
 | **Total Base Overhead** | **61 Bytes** | **Minimum requirement for any basic CKB cell** |
@@ -95,17 +96,14 @@ The frontend is built with a warm, elegant **Light & Creamy aesthetic** designed
 ---
 
 ## 📸 Executive Proof & Screenshot Gallery
-*(Proof of work for web frontend and CLI execution will be embedded below)*
 
-### 1. Web Frontend Interface (Light & Creamy Theme)
-```
-[Insert 04 Web Frontend Screenshot Here]
-```
+### 1. Wallet Connection & Address Profile Card
+![Wallet Connection and Address Display](./images/conectwalet.png)
 
-### 2. Terminal CLI Execution Output
-```
-[Insert 04 CLI Execution Screenshot Here]
-```
+---
+
+### 2. Dashboard, Memo Submission & On-Chain Feed
+![Dashboard, Concept Tabs and Memo Feed](./images/dashboard+testing.png)
 
 ---
 
@@ -131,7 +129,7 @@ cd week1_report/04_ccc_dapp/frontend
 # 2. Start the local Next.js development server
 pnpm dev
 
-# 3. Open your browser at http://localhost:3000
+# 3. Open your browser at http://localhost:3000 (or http://localhost:3001)
 ```
 
 ---
@@ -144,6 +142,6 @@ pnpm dev
 ├── CKB Core SDK:       @ckb-ccc/core (^1.19.1)
 ├── React Connector:    @ckb-ccc/connector-react (^1.1.9)
 ├── Icons:              lucide-react (^1.38.0)
-├── Signers Supported:  JoyID (Passkey), OKX, UniSat, Raw Private Key
+├── Signers Supported:  Omnilock (MetaMask), JoyID (Passkey), OKX, UniSat
 └── Target Network:     CKB Public Testnet (Pudge)
 ```
