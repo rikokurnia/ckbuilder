@@ -28,22 +28,12 @@ Each Spore DOB is **valuable by design** because its storage capacity is funded 
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
 ### 1. Web Frontend UI
-```
-[Insert Spore DOB Web Frontend Screenshot Here]
-```
+![Spore DOB Web Frontend](./images/web-fe.png)
 
 ### 2. Terminal CLI Minting Output
-```
-[Insert Terminal CLI Execution Output Screenshot Here]
-```
-
-### 3. Explorer On-Chain Spore Verification
-```
-[Insert Explorer Spore Transaction View Screenshot Here]
-```
+![Terminal CLI Execution Output](./images/cliOutpus.png)
 
 ---
 

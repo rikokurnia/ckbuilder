@@ -32,9 +32,8 @@ This section covers the core building blocks of decentralized application develo
 ![Terminal CLI Execution Output](./3.2_store-data-on-cell/images/cliOutput.png)
 
 ### 3.3 Create DOB (Spore Protocol)
-```
-[Insert 3.3 Create DOB Screenshot Here]
-```
+![Spore DOB Web Frontend](./3.3_create-dob/images/web-fe.png)
+![Terminal CLI Execution Output](./3.3_create-dob/images/cliOutpus.png)
 
 ### 3.4 xUDT Token
 ```
