@@ -1,0 +1,35 @@
+{
+  "name": "@offckb/write-and-read-message",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "sync:devnet": "node scripts/sync-devnet-system-scripts.cjs",
+    "clean": "node scripts/clean-dist.cjs",
+    "start": "npm run sync:devnet && parcel index.html --dist-dir .parcel-dev --cache-dir .parcel-cache-dev",
+    "start:testnet": "cross-env NETWORK=testnet parcel index.html --dist-dir .parcel-dev --cache-dir .parcel-cache-dev",
+    "build": "npm run clean && parcel build index.html --dist-dir dist --cache-dir .parcel-cache-build --public-url ./ && node scripts/verify-browser-bundle.cjs",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.5.3",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.11",
+    "cross-env": "^7.0.3",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.3.0",
+    "parcel": "^2.15.4",
+    "path-browserify": "^1.0.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "typescript": "^5.8.2"
+  }
+}
