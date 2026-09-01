@@ -28,22 +28,12 @@ This module validates minting a custom xUDT fungible token supply directly on th
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
 ### 1. Web Frontend UI
-```
-[Insert xUDT Web Frontend Screenshot Here]
-```
+![xUDT Web Frontend](./images/web-fe.png)
 
 ### 2. Terminal CLI Issuance Output
-```
-[Insert Terminal CLI Execution Output Screenshot Here]
-```
-
-### 3. Explorer On-Chain Token Verification
-```
-[Insert Explorer xUDT Transaction View Screenshot Here]
-```
+![Terminal CLI Execution Output](./images/outputCli.png)
 
 ---
 

@@ -36,9 +36,8 @@ This section covers the core building blocks of decentralized application develo
 ![Terminal CLI Execution Output](./3.3_create-dob/images/cliOutpus.png)
 
 ### 3.4 xUDT Token
-```
-[Insert 3.4 xUDT Token Screenshot Here]
-```
+![xUDT Web Frontend](./3.4_xudt/images/web-fe.png)
+![Terminal CLI Execution Output](./3.4_xudt/images/outputCli.png)
 
 ### 3.5 Simple Lock
 ```
