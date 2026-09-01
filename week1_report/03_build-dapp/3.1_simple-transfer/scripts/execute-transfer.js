@@ -1,10 +1,30 @@
 import { ccc } from "@ckb-ccc/core";
 
 const SENDER_PRIVKEY = "0x1afb1c688691e2eddadaca9230273630c26f9abbcc1f31056b38b05d11cc3574";
+const RPC_URL = "https://testnet.ckb.dev";
 const client = new ccc.ClientPublicTestnet({
-  url: "https://testnet.ckb.dev",
+  url: RPC_URL,
 });
 const signer = new ccc.SignerCkbPrivateKey(client, SENDER_PRIVKEY);
+
+async function checkTxStatusViaRpc(txHash) {
+  try {
+    const res = await fetch(RPC_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: 2,
+        jsonrpc: "2.0",
+        method: "get_transaction",
+        params: [txHash],
+      }),
+    });
+    const json = await res.json();
+    return json?.result?.tx_status;
+  } catch (err) {
+    return null;
+  }
+}
 
 async function main() {
   const senderAddress = await signer.getRecommendedAddress();
@@ -37,9 +57,10 @@ async function main() {
 
   console.log("\nWaiting for on-chain confirmation...");
   while (true) {
-    const txState = await client.getTransaction(txHash);
-    if (txState && txState.status && txState.status.status === "committed") {
-      console.log(`✅ Transaction committed in block ${txState.status.blockNumber} (${txState.status.blockHash})`);
+    const txStatus = await checkTxStatusViaRpc(txHash);
+    if (txStatus && txStatus.status === "committed") {
+      const blockNum = parseInt(txStatus.block_number, 16);
+      console.log(`✅ Transaction committed in block ${blockNum} (${txStatus.block_hash})`);
       break;
     }
     await new Promise((r) => setTimeout(r, 2000));
