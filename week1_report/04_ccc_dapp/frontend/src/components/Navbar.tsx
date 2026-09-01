@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useCcc, useSigner, ccc } from "@ckb-ccc/connector-react";
-import { Wallet, RefreshCw, Layers } from "lucide-react";
+import { Wallet, RefreshCw, Layers, Copy, Check } from "lucide-react";
 
 interface NavbarProps {
   onRefreshFeed: () => void;
@@ -12,8 +12,9 @@ export function Navbar({ onRefreshFeed }: NavbarProps) {
   const { open, disconnect, client } = useCcc();
   const signer = useSigner();
   const [tipBlock, setTipBlock] = useState<string>("Loading...");
-  const [address, setAddress] = useState<string>("");
+  const [address, setAddress] = useState<string>("" );
   const [balance, setBalance] = useState<string>("0");
+  const [copied, setCopied] = useState(false);
 
   // Poll tip block height
   useEffect(() => {
@@ -63,6 +64,13 @@ export function Navbar({ onRefreshFeed }: NavbarProps) {
     fetchAccount();
   }, [signer, client]);
 
+  const handleCopy = () => {
+    if (!address) return;
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <header className="sticky top-0 z-30 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#EBE4D8] px-4 lg:px-8 py-3.5">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -101,7 +109,7 @@ export function Navbar({ onRefreshFeed }: NavbarProps) {
           <button
             onClick={onRefreshFeed}
             title="Refresh On-Chain Memos"
-            className="p-2 rounded-lg cream-btn-secondary text-[#57534E] hover:text-[#262320]"
+            className="p-2 rounded-lg cream-btn-secondary text-[#57534E] hover:text-[#262320] cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -109,17 +117,33 @@ export function Navbar({ onRefreshFeed }: NavbarProps) {
           {/* Account / Connect Button */}
           {signer && address ? (
             <div className="flex items-center gap-2">
-              <div className="flex flex-col text-right px-3 py-1 rounded-lg cream-card-subtle text-xs border border-[#E5DCD0]">
-                <span className="font-medium text-[#262320]">
-                  {parseFloat(balance).toLocaleString("en-US", { maximumFractionDigits: 2 })} CKB
-                </span>
-                <span className="text-[10px] text-[#78716C] font-mono">
-                  {address.slice(0, 7)}...{address.slice(-6)}
-                </span>
-              </div>
+              {/* Clickable Address & Balance Badge */}
+              <button
+                onClick={handleCopy}
+                title="Click to copy full address"
+                className="flex items-center gap-2.5 text-left px-3.5 py-1.5 rounded-xl cream-card-subtle hover:border-[#D97706] border border-[#E5DCD0] text-xs cursor-pointer transition-all shadow-2xs group"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold text-[#262320]">
+                    {parseFloat(balance).toLocaleString("en-US", { maximumFractionDigits: 2 })} CKB
+                  </span>
+                  <span className="text-[10px] text-[#78716C] font-mono group-hover:text-[#B45309]">
+                    {address.slice(0, 8)}...{address.slice(-6)}
+                  </span>
+                </div>
+
+                <div className="p-1 rounded-md bg-white border border-[#E5DCD0] text-[#78716C] group-hover:text-[#B45309] shrink-0">
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </div>
+              </button>
+
               <button
                 onClick={() => disconnect()}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium cream-btn-secondary text-rose-700 hover:bg-rose-50 border-rose-200"
+                className="px-3 py-2 rounded-xl text-xs font-medium cream-btn-secondary text-rose-700 hover:bg-rose-50 border-rose-200 cursor-pointer"
               >
                 Disconnect
               </button>
