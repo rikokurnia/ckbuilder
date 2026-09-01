@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ccc, useCcc, useSigner } from "@ckb-ccc/connector-react";
-import { MessageSquare, ExternalLink, RefreshCw, Layers, Database, Lock, Loader2 } from "lucide-react";
+import { MessageSquare, ExternalLink, Database, Loader2 } from "lucide-react";
 
 interface MemoItem {
   outPoint: string;
@@ -15,24 +15,21 @@ interface MemoItem {
 }
 
 interface MemoFeedProps {
-  customSigner: ccc.Signer | null;
   refreshKey: number;
 }
 
-export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
-  const { client } = useCcc();
-  const cccSigner = useSigner();
+export function MemoFeed({ refreshKey }: MemoFeedProps) {
+  const { client, open } = useCcc();
+  const signer = useSigner();
   const [memos, setMemos] = useState<MemoItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalScanned, setTotalScanned] = useState(0);
-
-  const activeSigner = customSigner || cccSigner;
 
   useEffect(() => {
     let isMounted = true;
 
     async function fetchMemos() {
-      if (!activeSigner) {
+      if (!signer) {
         setMemos([]);
         setTotalScanned(0);
         return;
@@ -40,7 +37,7 @@ export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
 
       setLoading(true);
       try {
-        const lock = (await activeSigner.getRecommendedAddressObj()).script;
+        const lock = (await signer.getRecommendedAddressObj()).script;
         const list: MemoItem[] = [];
         let count = 0;
 
@@ -84,7 +81,7 @@ export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
     return () => {
       isMounted = false;
     };
-  }, [activeSigner, client, refreshKey]);
+  }, [signer, client, refreshKey]);
 
   return (
     <div className="cream-card rounded-2xl p-6 shadow-sm border border-[#EBE4D8] space-y-4">
@@ -99,7 +96,7 @@ export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
               On-Chain Memos Feed
             </h3>
             <p className="text-xs text-[#78716C]">
-              Decoded state from live CKB Testnet cells owned by your lock script
+              Decoded state from live CKB Testnet cells owned by your connected wallet
             </p>
           </div>
         </div>
@@ -118,12 +115,18 @@ export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
       </div>
 
       {/* Feed List */}
-      {!activeSigner ? (
-        <div className="text-center py-10 px-4 rounded-xl cream-card-subtle space-y-2 border border-dashed border-[#E5DCD0]">
+      {!signer ? (
+        <div className="text-center py-10 px-4 rounded-xl cream-card-subtle space-y-3 border border-dashed border-[#E5DCD0]">
           <Database className="w-8 h-8 text-[#A8A29E] mx-auto" />
           <p className="text-xs text-[#57534E] font-medium">
-            Connect a wallet or activate your Dev Private Key to view your on-chain memos.
+            Connect your MetaMask or JoyID wallet to view your on-chain memos.
           </p>
+          <button
+            onClick={() => open()}
+            className="px-4 py-2 rounded-xl text-xs font-semibold cream-btn-primary cursor-pointer inline-block"
+          >
+            Connect Wallet
+          </button>
         </div>
       ) : loading && memos.length === 0 ? (
         <div className="text-center py-10 px-4 rounded-xl cream-card-subtle space-y-2 border border-[#E5DCD0]">
@@ -135,7 +138,7 @@ export function MemoFeed({ customSigner, refreshKey }: MemoFeedProps) {
           <MessageSquare className="w-8 h-8 text-[#A8A29E] mx-auto" />
           <p className="text-xs font-medium text-[#57534E]">No memos found yet.</p>
           <p className="text-[11px] text-[#78716C]">
-            Use the form above to broadcast your first message directly on CKB Testnet!
+            Use the form to broadcast your first message directly on CKB Testnet!
           </p>
         </div>
       ) : (

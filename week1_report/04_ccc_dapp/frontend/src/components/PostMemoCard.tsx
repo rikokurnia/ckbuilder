@@ -5,13 +5,12 @@ import { ccc, useCcc, useSigner } from "@ckb-ccc/connector-react";
 import { Send, CheckCircle2, AlertCircle, Loader2, Sparkles, ExternalLink, HardDrive } from "lucide-react";
 
 interface PostMemoCardProps {
-  customSigner: ccc.Signer | null;
   onMemoPosted: () => void;
 }
 
-export function PostMemoCard({ customSigner, onMemoPosted }: PostMemoCardProps) {
-  const { client } = useCcc();
-  const cccSigner = useSigner();
+export function PostMemoCard({ onMemoPosted }: PostMemoCardProps) {
+  const { client, open } = useCcc();
+  const signer = useSigner();
   const [memoText, setMemoText] = useState("");
   const [capacityCkb, setCapacityCkb] = useState("100");
   const [loading, setLoading] = useState(false);
@@ -19,16 +18,15 @@ export function PostMemoCard({ customSigner, onMemoPosted }: PostMemoCardProps) 
   const [txHash, setTxHash] = useState("");
   const [error, setError] = useState("");
 
-  const activeSigner = customSigner || cccSigner;
-
   const memoBytes = new TextEncoder().encode(memoText);
   const memoHex = memoText ? ccc.hexFrom(memoBytes) : "0x";
   const minRequiredCapacity = 61 + memoBytes.length;
 
   const handlePostMemo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!activeSigner) {
-      setError("Please connect a wallet or activate a Dev Private Key first.");
+    if (!signer) {
+      setError("Please connect your wallet (e.g. MetaMask or JoyID) first.");
+      open();
       return;
     }
 
@@ -49,7 +47,7 @@ export function PostMemoCard({ customSigner, onMemoPosted }: PostMemoCardProps) 
     setStatusMessage("Assembling CKB transaction and gathering live input cells...");
 
     try {
-      const lock = (await activeSigner.getRecommendedAddressObj()).script;
+      const lock = (await signer.getRecommendedAddressObj()).script;
       const allocatedCapacity = ccc.fixedPointFrom(numCapacity);
 
       const tx = ccc.Transaction.from({
@@ -63,11 +61,11 @@ export function PostMemoCard({ customSigner, onMemoPosted }: PostMemoCardProps) 
       });
 
       setStatusMessage("Balancing inputs, change cell, and miner fee...");
-      await tx.completeInputsByCapacity(activeSigner);
-      await tx.completeFeeBy(activeSigner, 1500n);
+      await tx.completeInputsByCapacity(signer);
+      await tx.completeFeeBy(signer, 1500n);
 
-      setStatusMessage("Signing transaction with CCC Signer...");
-      const hash = await activeSigner.sendTransaction(tx);
+      setStatusMessage("Requesting signature from MetaMask / CCC Signer...");
+      const hash = await signer.sendTransaction(tx);
       setTxHash(hash);
       setStatusMessage("Transaction broadcasted! Polling for on-chain block confirmation...");
 
@@ -249,27 +247,35 @@ export function PostMemoCard({ customSigner, onMemoPosted }: PostMemoCardProps) 
         )}
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading || !activeSigner}
-          className={`w-full py-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
-            loading || !activeSigner
-              ? "bg-[#E5DCD0] text-[#A8A29E] cursor-not-allowed"
-              : "cream-btn-primary"
-          }`}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Broadcasting to CKB Testnet...</span>
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              <span>Broadcast Memo Cell On-Chain</span>
-            </>
-          )}
-        </button>
+        {signer ? (
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer ${
+              loading ? "bg-[#E5DCD0] text-[#A8A29E] cursor-not-allowed" : "cream-btn-primary"
+            }`}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Broadcasting to CKB Testnet...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span>Sign & Broadcast Memo with MetaMask</span>
+              </>
+            )}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => open()}
+            className="w-full py-3 rounded-xl text-xs font-semibold cream-btn-primary flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Connect Wallet (MetaMask) to Post</span>
+          </button>
+        )}
       </form>
     </div>
   );

@@ -7,17 +7,14 @@ import { ConceptCards } from "@/components/ConceptCards";
 import { PostMemoCard } from "@/components/PostMemoCard";
 import { MemoFeed } from "@/components/MemoFeed";
 import { CapacityCalculator } from "@/components/CapacityCalculator";
-import { Sparkles, Layers, ShieldCheck, ExternalLink } from "lucide-react";
+import { Sparkles, Layers, ExternalLink } from "lucide-react";
 
 export default function Home() {
   const { client } = useCcc();
-  const cccSigner = useSigner();
-  const [customSigner, setCustomSigner] = useState<ccc.Signer | null>(null);
+  const signer = useSigner();
   const [refreshKey, setRefreshKey] = useState(0);
   const [tipBlock, setTipBlock] = useState<string>("...");
   const [address, setAddress] = useState<string>("");
-
-  const activeSigner = customSigner || cccSigner || null;
 
   // Poll tip block
   useEffect(() => {
@@ -42,19 +39,19 @@ export default function Home() {
   useEffect(() => {
     let isMounted = true;
     async function fetchAddress() {
-      if (!activeSigner) {
+      if (!signer) {
         setAddress("");
         return;
       }
       try {
-        const addr = await activeSigner.getRecommendedAddress();
+        const addr = await signer.getRecommendedAddress();
         if (isMounted) setAddress(addr);
       } catch (err) {
         console.error("Address error:", err);
       }
     }
     fetchAddress();
-  }, [activeSigner]);
+  }, [signer]);
 
   const handleRefreshFeed = () => {
     setRefreshKey((prev) => prev + 1);
@@ -63,11 +60,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2]">
       {/* Top Navbar */}
-      <Navbar
-        customSigner={customSigner}
-        setCustomSigner={setCustomSigner}
-        onRefreshFeed={handleRefreshFeed}
-      />
+      <Navbar onRefreshFeed={handleRefreshFeed} />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -83,7 +76,7 @@ export default function Home() {
           </h1>
 
           <p className="text-sm text-[#78716C] leading-relaxed">
-            Write immutable messages directly into CKB cell capacity storage while learning the 5 core architectural concepts of CCC:{" "}
+            Connect your <span className="font-semibold text-[#B45309]">MetaMask</span> or JoyID wallet to write immutable messages directly into CKB cell capacity storage while learning the 5 core concepts of CCC:{" "}
             <span className="font-semibold text-[#B45309]">Client</span>,{" "}
             <span className="font-semibold text-[#B45309]">Address</span>,{" "}
             <span className="font-semibold text-[#B45309]">Signer</span>,{" "}
@@ -94,7 +87,7 @@ export default function Home() {
 
         {/* 5 Core Concepts Interactive Explorer */}
         <ConceptCards
-          signer={activeSigner}
+          signer={signer}
           address={address}
           tipBlock={tipBlock}
         />
@@ -103,19 +96,13 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Post Memo & Capacity Calculator */}
           <div className="lg:col-span-5 space-y-8">
-            <PostMemoCard
-              customSigner={customSigner}
-              onMemoPosted={handleRefreshFeed}
-            />
+            <PostMemoCard onMemoPosted={handleRefreshFeed} />
             <CapacityCalculator />
           </div>
 
           {/* Right Column: Live On-Chain Memos Feed */}
           <div className="lg:col-span-7">
-            <MemoFeed
-              customSigner={customSigner}
-              refreshKey={refreshKey}
-            />
+            <MemoFeed refreshKey={refreshKey} />
           </div>
         </div>
       </main>
