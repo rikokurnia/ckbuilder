@@ -25,22 +25,12 @@ This module demonstrates how to construct, sign, and broadcast native CKB token 
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
 ### 1. Web Frontend UI
-```
-[Insert Simple Transfer Web Frontend Screenshot Here]
-```
+![Simple Transfer Web Frontend](./images/web-fe.png)
 
 ### 2. Terminal CLI Transfer Output
-```
-[Insert Terminal CLI Execution Output Screenshot Here]
-```
-
-### 3. Explorer On-Chain Confirmation
-```
-[Insert Explorer Transaction View Screenshot Here]
-```
+![Terminal CLI Execution Output](./images/cliOutput.png)
 
 ---
 

@@ -24,9 +24,8 @@ This section covers the core building blocks of decentralized application develo
 *(Proof of work for each material will be embedded below)*
 
 ### 3.1 Simple Transfer
-```
-[Insert 3.1 Simple Transfer Screenshot Here]
-```
+![Simple Transfer Web Frontend](./3.1_simple-transfer/images/web-fe.png)
+![Terminal CLI Execution Output](./3.1_simple-transfer/images/cliOutput.png)
 
 ### 3.2 Store Data on Cell
 ```
