@@ -156,7 +156,7 @@ export function exportSystemScripts({
   const exportedPath = path.join(directory, "system-scripts.json");
 
   try {
-    const result = spawnSync("offckb", ["system-scripts", "-o", exportedPath], {
+    const result = spawnSync("npx", ["offckb", "system-scripts", "-o", exportedPath], {
       stdio: "inherit",
       shell: process.platform === "win32",
     });
@@ -308,15 +308,12 @@ function main() {
     args.push("--privkey", PRIVKEY);
   }
 
-  // Try to find offckb binary
-  const offckbCmd = "offckb";
-
-  // For now, use 'offckb' directly - users should have it installed
-  console.log(`💻 Running: ${offckbCmd} ${args.join(" ")}`);
+  // Use npx offckb
+  console.log(`💻 Running: npx offckb ${args.join(" ")}`);
   console.log("");
 
   // Execute the deploy command
-  const deployProcess = spawn(offckbCmd, args, {
+  const deployProcess = spawn("npx", ["offckb", ...args], {
     stdio: "inherit",
     shell: process.platform === "win32",
   });

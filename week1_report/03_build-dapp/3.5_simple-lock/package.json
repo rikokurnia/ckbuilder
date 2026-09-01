@@ -31,5 +31,13 @@
     "ts-jest": "~29.2.6",
     "@types/node": "~22.13.8",
     "@types/jest": "~29.5.14"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "secp256k1",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

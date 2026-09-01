@@ -1,77 +1,122 @@
-# Simple Lock
+# 🔐 3.5 - Custom Hash-Lock Script & Full-Stack Next.js dApp
 
-An educational CKB dApp that deploys a JavaScript hash-lock contract, creates a hash-lock address, and spends cells by revealing a preimage.
+> **Developing, Unit Testing, and Deploying a Custom JavaScript Lock Script Contract with Next.js Frontend on Nervos CKB**  
+> Reference Documentation: [Nervos Docs - Simple Lock](https://docs.nervos.org/docs/dapp/simple-lock) & [ckb-js-vm Smart Contracts](https://github.com/nervosnetwork/ckb-js-vm)
 
-> This contract proves knowledge of a secret, not ownership. The preimage becomes public when used, so do not use it with valuable funds. The runnable flow supports Devnet and Testnet.
+---
 
-## Prerequisites
+## 🌟 Overview
+In the Nervos CKB Cell Model, asset ownership and spending permissions are governed entirely by **Lock Scripts**. Any transaction attempting to consume a live cell must execute the cell's Lock Script inside the CKB-VM (RISC-V) environment and return exit code `0`.
 
-- Git
-- Node.js 20 or later
-- pnpm
-- OffCKB
-- Rust and `ckb-debugger`
-- protobuf if installing `ckb-debugger` reports `Could not find protoc`
+This module demonstrates building a custom **Hash-Lock Contract** in JavaScript/TypeScript compiled to QuickJS bytecode (`hash-lock.bc`), unit testing it with `ckb-testtool`, deploying it to the **CKB Public Testnet**, and interacting with it via a full-stack Next.js web application.
 
-Install `ckb-debugger` with `cargo install ckb-debugger`. On macOS, install protobuf with `brew install protobuf`. On Windows, ensure the npm global bin directory and Cargo bin directory are in `PATH`, approve required pnpm build scripts if prompted, and keep the project in a path without `#`.
+---
 
-First-time setup can take 30–45 minutes because `ckb-debugger` compiles locally. Once tools are installed, the tutorial usually takes 10–15 minutes.
+## 🔗 On-Chain Testnet Deployment Proof
 
-## Devnet Quick Start
+| Parameter | Value / Details |
+| :--- | :--- |
+| **Network** | CKB Public Testnet (Pudge) |
+| **Deployment Tx Hash** | [`0x85d55b173b7f38754a48342fcb79b0740d9d8d7407b014628edcee174b82e8dd`](https://pudge.explorer.nervos.org/transaction/0x85d55b173b7f38754a48342fcb79b0740d9d8d7407b014628edcee174b82e8dd) |
+| **Contract OutPoint** | `0x85d55b173b7f38754a48342fcb79b0740d9d8d7407b014628edcee174b82e8dd:0` |
+| **Code Hash** | `0xcd262cb39d9e83f63e5415a56a23982fb6ae79b993e3cf371c12fad71dd23519` |
+| **Hash Type** | `data2` |
+| **ckb-js-vm OutPoint** | `0x756fdaf0d1ba1d2e03dc13c71c967b24021bc054893a766ccee6879c468892d2:0` |
+| **Deployer Address** | `ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr` |
+| **Status** | 🟢 `committed` |
+| **Explorer Link** | [View Contract on CKB Explorer](https://pudge.explorer.nervos.org/transaction/0x85d55b173b7f38754a48342fcb79b0740d9d8d7407b014628edcee174b82e8dd) |
 
-In one terminal:
+---
 
-```bash
-pnpm install
-offckb node
+## 📸 Screenshots & Proof of Work
+*(Add manual screenshot evidence below)*
+
+### 1. Web Frontend UI (Next.js)
+```
+[Insert Simple Lock Web Frontend Screenshot Here]
 ```
 
-Keep the Devnet running. In a second terminal, return to this directory and run:
+### 2. Terminal Test & Deployment Output
+```
+[Insert Terminal Unit Test and Deployment Screenshot Here]
+```
 
+### 3. Explorer On-Chain Contract Verification
+```
+[Insert Explorer Contract Deployment View Screenshot Here]
+```
+
+---
+
+## 🧠 Core Technical Implementation
+
+### 1. Hash-Lock Contract Logic (`contracts/hash-lock/src/index.ts`)
+```typescript
+import * as bindings from "@ckb-js-std/bindings";
+import { HighLevel, log, hashCkb, bytesEq } from "@ckb-js-std/core";
+
+function main(): number {
+  log.setLevel(log.LogLevel.Debug);
+
+  // 1. Extract target expected hash from script args
+  let expect_hash = new Uint8Array(HighLevel.loadScript().args).slice(35);
+
+  // 2. Load secret preimage from WitnessArgs.lock
+  let witness_args = HighLevel.loadWitnessArgs(0, bindings.SOURCE_GROUP_INPUT);
+  let preimage = witness_args.lock!;
+
+  // 3. Compute Blake2b hash of preimage
+  let hash = hashCkb(preimage);
+
+  // 4. Verify cryptographic equality
+  if (!bytesEq(hash, expect_hash.buffer)) {
+    log.error(`Check hash failed!`);
+    return 11; // Non-zero exit rejects transaction
+  }
+  return 0; // Success unlocks cell
+}
+
+bindings.exit(main());
+```
+
+### 2. Contract Build & Bytecode Compilation
+The contract is bundled using `esbuild` and compiled to CKB-VM bytecode using `ckb-debugger`:
 ```bash
-pnpm run deploy -- --network devnet
+npx esbuild --platform=neutral --minify --bundle --external:@ckb-js-std/bindings --target=es2022 contracts/hash-lock/src/index.ts --outfile=dist/hash-lock.js
+ckb-debugger --read-file dist/hash-lock.js --bin node_modules/ckb-testtool/src/unittest/defaultScript/ckb-js-vm -- -c dist/hash-lock.bc
+```
+
+### 3. Off-Chain Unit Testing (`ckb-testtool`)
+10 unit tests verify both successful unlock with valid preimage and instant rejection with wrong preimage:
+```bash
+npm test
+```
+```text
+PASS tests/frontend-transaction.test.ts
+PASS tests/hash-lock.mock.test.ts
+Test Suites: 2 passed, 2 total
+Tests:       10 passed, 10 total
+```
+
+---
+
+## 🚀 How to Run
+
+### Step 1: Build Contract & Run Unit Tests
+```bash
+npm install
+npm run build
+npm test
+```
+
+### Step 2: Deploy to CKB Testnet
+```bash
+npm run deploy -- --network testnet --privkey 0x1afb1c688691e2eddadaca9230273630c26f9abbcc1f31056b38b05d11cc3574
+```
+
+### Step 3: Run Full-Stack Next.js Frontend
+```bash
 cd frontend
 pnpm dev
 ```
-
-The deploy command builds the contract, deploys `dist/hash-lock.bc`, refreshes the selected network's system-script information, and validates and synchronizes both deployment files with the frontend. Synchronization failure makes deployment fail.
-
-The frontend defaults to Devnet when `NEXT_PUBLIC_NETWORK` is unset. It verifies that both the deployed `hash-lock.bc` and `ckb-js-vm` OutPoints are live before enabling transfers.
-
-## Testnet
-
-Fund the deployer key with Testnet CKB, then run:
-
-```bash
-pnpm run deploy -- --network testnet --privkey 0x...
-cd frontend
-NEXT_PUBLIC_NETWORK=testnet pnpm dev
-```
-
-Current OffCKB supports direct deployment only to Devnet and Testnet, and its Mainnet system-script export does not provide the `ckb-js-vm` dependency this example needs. The deploy command reports that limitation directly instead of starting a deployment that cannot complete.
-
-For Mainnet-state testing, use an isolated [OffCKB Mainnet fork](https://github.com/ckb-devrel/offckb) and follow its replay-risk guidance. This tutorial's frontend remains configured for Devnet and Testnet.
-
-## Stale OutPoints
-
-An OutPoint identifies one specific cell by transaction hash and output index. Redeploying, switching networks, or resetting Devnet invalidates old OutPoints. If the frontend reports a stale dependency:
-
-1. Confirm `NEXT_PUBLIC_NETWORK` matches the network you deployed to.
-2. Redeploy the contract for that network.
-3. Confirm the contract and system-script files under `deployment/` match the copies under `frontend/deployment/`.
-4. Restart the frontend and select **Check again**.
-
-## Commands
-
-```bash
-pnpm build
-pnpm test -- hash-lock.mock.test.ts --runInBand
-pnpm test:deploy
-pnpm --dir frontend build
-```
-
-Contract output is written to `dist/`. Deployment history is written under `deployment/<network>/hash-lock.bc/`.
-
-## Security Model
-
-The example intentionally returns change to the same hash lock. After the preimage is revealed, that change and any untouched cells using the same hash can be spent by anyone who knows it. A production transaction should use a signature-protected change address and stronger authorization.
+Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the deployed Hash-Lock contract.

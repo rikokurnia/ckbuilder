@@ -54,7 +54,7 @@ function buildContract(contractName) {
     // Step 2: Bundle with esbuild
     console.log("  📦 Bundling with esbuild...");
     const esbuildCmd = [
-      "./node_modules/.bin/esbuild",
+      "npx esbuild",
       "--platform=neutral",
       "--minify",
       "--bundle",
