@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --cream-50: #FDFAF5;
+    --cream-100: #FBF6EE;
+    --cream-200: #F5EFE4;
+    --cream-300: #EAE1D3;
+    --cream-400: #DDD0BF;
+    --warm-dark: #262320;
+    --warm-muted: #6B635B;
+    --amber-gold: #D97706;
+    --amber-soft: #FEF3C7;
+  }
+
+  body {
+    background-color: #FAF7F2;
+    color: #262320;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Custom creamy glass and soft shadow tokens */
+.cream-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE4D8;
+  box-shadow: 0 4px 20px -2px rgba(180, 160, 140, 0.12), 0 2px 6px -1px rgba(180, 160, 140, 0.08);
+}
+
+.cream-card-subtle {
+  background: #FBF8F3;
+  border: 1px solid #EAE2D5;
+}
+
+.cream-badge {
+  background: #F4EFE6;
+  border: 1px solid #E5DCD0;
+  color: #5C5245;
+}
+
+.cream-input {
+  background: #FCFAF7;
+  border: 1px solid #E3DACD;
+  color: #262320;
+  transition: all 0.2s ease-in-out;
+}
+
+.cream-input:focus {
+  background: #FFFFFF;
+  border-color: #D97706;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+.cream-btn-primary {
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px -1px rgba(217, 119, 6, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cream-btn-primary:hover {
+  background: linear-gradient(135deg, #E58E19 0%, #C45E10 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -1px rgba(217, 119, 6, 0.45);
+}
+
+.cream-btn-primary:active {
+  transform: translateY(0);
+}
+
+.cream-btn-secondary {
+  background: #F4EFE6;
+  border: 1px solid #E2D7C8;
+  color: #4A4035;
+  transition: all 0.2s ease;
+}
+
+.cream-btn-secondary:hover {
+  background: #EAE1D2;
+  border-color: #D5C8B5;
+  color: #262320;
+}

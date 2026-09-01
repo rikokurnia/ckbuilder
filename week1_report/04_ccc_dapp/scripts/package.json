@@ -1,0 +1,12 @@
+{
+  "name": "04-ccc-dapp-scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "post-memo": "node memo-cli.js",
+    "query-memos": "node query-memos.js"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "^1.5.3"
+  }
+}
