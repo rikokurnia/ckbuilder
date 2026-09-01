@@ -29,22 +29,18 @@ This activity validates the core development workflow recommended in the officia
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
-### 1. Faucet Claim (100,000 CKB)
-```
-[Insert Nervos Pudge Faucet Claim Screenshot Here]
-```
+### 1. OffCKB CLI & Toolchain Verification
+![OffCKB CLI Version](./images/offckb_v.png)
 
-### 2. Terminal Build & Deployment Logs
-```
-[Insert Terminal Deployment Output Screenshot Here]
-```
+### 2. Testnet Account & Balance Verification (100k CKB Claim)
+![Testnet Account Balance](./images/account_testnetBalance.png)
 
-### 3. Explorer On-Chain Verification
-```
-[Insert CKB Explorer Tx View Screenshot Here]
-```
+### 3. Contract Compilation & Build Output
+![Contract Build Output](./images/build_output.png)
+
+### 4. CKB Testnet Explorer On-Chain Verification
+![CKB Explorer Verification](./images/explorerOutput.png)
 
 ---
 
