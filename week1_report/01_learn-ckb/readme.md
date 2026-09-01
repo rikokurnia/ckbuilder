@@ -18,11 +18,12 @@
 ---
 
 ## 📸 Preview / Screenshots
-*(Placeholders for application UI screenshots)*
 
-```
-[Insert Landing Page / Lesson View Screenshot Here]
-```
+### 🏠 Landing Page
+![LearnCKB Landing Page](./landing_page.png)
+
+### 📊 Course Dashboard & Learning Modules
+![LearnCKB Dashboard](./dashboard.png)
 
 ---
 
