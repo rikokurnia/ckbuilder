@@ -12,7 +12,7 @@ This section covers the core building blocks of decentralized application develo
 | No. | Module Name | Description | Status |
 | :---: | :--- | :--- | :---: |
 | **3.1** | [**Simple Transfer**](./3.1_simple-transfer/README.md) | Basic CKB token transfer and transaction construction via CCC | 🟢 **Validated On-Chain** ([Tx Proof](https://pudge.explorer.nervos.org/transaction/0x346797358df026210b3432366e9515c12c0872445a09ce6a5d7367e860571b2b)) |
-| **3.2** | [**Store Data on Cell**](./3.2_store-data-on-cell/README.md) | Writing and reading arbitrary on-chain state/data in Cell capacity | 🟡 Ready for Testing |
+| **3.2** | [**Store Data on Cell**](./3.2_store-data-on-cell/README.md) | Writing and reading arbitrary on-chain state/data in Cell capacity | 🟢 **Validated On-Chain** ([Tx Proof](https://pudge.explorer.nervos.org/transaction/0x0861f76c027c3b9419f9372f55284022c9787e8f44e5f47a0a91af9a586d8063)) |
 | **3.3** | [**Create DOB (Spore Protocol)**](./3.3_create-dob/README.md) | Minting Digital Objects (DOBs) with on-chain value backing | 🟡 Ready for Testing |
 | **3.4** | [**xUDT (Extensible UDT)**](./3.4_xudt/README.md) | Minting and managing programmable fungible tokens on CKB | 🟡 Ready for Testing |
 | **3.5** | [**Simple Lock**](./3.5_simple-lock/README.md) | Custom Lock Script contract and frontend wallet integration | 🟡 Ready for Testing |
