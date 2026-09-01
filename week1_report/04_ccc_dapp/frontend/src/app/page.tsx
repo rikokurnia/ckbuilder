@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ccc, useCcc, useSigner } from "@ckb-ccc/connector-react";
 import { Navbar } from "@/components/Navbar";
+import { WalletProfileCard } from "@/components/WalletProfileCard";
 import { ConceptCards } from "@/components/ConceptCards";
 import { PostMemoCard } from "@/components/PostMemoCard";
 import { MemoFeed } from "@/components/MemoFeed";
@@ -15,6 +16,7 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [tipBlock, setTipBlock] = useState<string>("...");
   const [address, setAddress] = useState<string>("");
+  const [balance, setBalance] = useState<string>("0");
 
   // Poll tip block
   useEffect(() => {
@@ -35,23 +37,32 @@ export default function Home() {
     };
   }, [client]);
 
-  // Sync address
+  // Sync address & balance
   useEffect(() => {
     let isMounted = true;
-    async function fetchAddress() {
+    async function fetchAccount() {
       if (!signer) {
         setAddress("");
+        setBalance("0");
         return;
       }
       try {
         const addr = await signer.getRecommendedAddress();
-        if (isMounted) setAddress(addr);
+        const script = (await signer.getRecommendedAddressObj()).script;
+        if (!isMounted) return;
+        setAddress(addr);
+
+        let sum = 0n;
+        for await (const cell of client.findCells({ script, scriptType: "lock", scriptSearchMode: "exact" })) {
+          sum += cell.cellOutput.capacity;
+        }
+        if (isMounted) setBalance(ccc.fixedPointToString(sum));
       } catch (err) {
-        console.error("Address error:", err);
+        console.error("Account error:", err);
       }
     }
-    fetchAddress();
-  }, [signer]);
+    fetchAccount();
+  }, [signer, client, refreshKey]);
 
   const handleRefreshFeed = () => {
     setRefreshKey((prev) => prev + 1);
@@ -65,7 +76,7 @@ export default function Home() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Hero Section */}
-        <section className="text-center max-w-3xl mx-auto space-y-3 pt-2 pb-4">
+        <section className="text-center max-w-3xl mx-auto space-y-3 pt-2 pb-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full cream-badge text-xs font-medium">
             <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
             <span>Nervos CKB • Common Chain Connector (CCC) Demo</span>
@@ -84,6 +95,9 @@ export default function Home() {
             <span className="font-semibold text-[#B45309]">Transaction</span>.
           </p>
         </section>
+
+        {/* Prominent Wallet & Address Status Card */}
+        <WalletProfileCard address={address} balance={balance} />
 
         {/* 5 Core Concepts Interactive Explorer */}
         <ConceptCards
