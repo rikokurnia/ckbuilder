@@ -29,22 +29,13 @@ This module demonstrates building a custom **Hash-Lock Contract** in JavaScript/
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
 ### 1. Web Frontend UI (Next.js)
-```
-[Insert Simple Lock Web Frontend Screenshot Here]
-```
+![Simple Lock Frontend 1](./images/web-fe1.png)
+![Simple Lock Frontend 2](./images/web-fe2.png)
 
 ### 2. Terminal Test & Deployment Output
-```
-[Insert Terminal Unit Test and Deployment Screenshot Here]
-```
-
-### 3. Explorer On-Chain Contract Verification
-```
-[Insert Explorer Contract Deployment View Screenshot Here]
-```
+![Terminal Unit Test and Deployment](./images/otputCli.png)
 
 ---
 

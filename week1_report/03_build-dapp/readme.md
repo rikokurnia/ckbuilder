@@ -40,9 +40,9 @@ This section covers the core building blocks of decentralized application develo
 ![Terminal CLI Execution Output](./3.4_xudt/images/outputCli.png)
 
 ### 3.5 Simple Lock
-```
-[Insert 3.5 Simple Lock Screenshot Here]
-```
+![Simple Lock Frontend 1](./3.5_simple-lock/images/web-fe1.png)
+![Simple Lock Frontend 2](./3.5_simple-lock/images/web-fe2.png)
+![Terminal Unit Test and Deployment](./3.5_simple-lock/images/otputCli.png)
 
 ### 3.6 CCC Molecule
 ```
