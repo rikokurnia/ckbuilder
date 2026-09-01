@@ -28,22 +28,12 @@ This module validates writing custom data to a live Cell on the public CKB Testn
 ---
 
 ## 📸 Screenshots & Proof of Work
-*(Add manual screenshot evidence below)*
 
 ### 1. Web Frontend UI
-```
-[Insert Store Data Web Frontend Screenshot Here]
-```
+![Store Data Web Frontend](./images/web-fe.png)
 
 ### 2. Terminal CLI Execution Output
-```
-[Insert Terminal CLI Execution Output Screenshot Here]
-```
-
-### 3. Explorer On-Chain Data Verification
-```
-[Insert Explorer On-Chain Data View Screenshot Here]
-```
+![Terminal CLI Execution Output](./images/cliOutput.png)
 
 ---
 

@@ -28,9 +28,8 @@ This section covers the core building blocks of decentralized application develo
 ![Terminal CLI Execution Output](./3.1_simple-transfer/images/cliOutput.png)
 
 ### 3.2 Store Data on Cell
-```
-[Insert 3.2 Store Data on Cell Screenshot Here]
-```
+![Store Data Web Frontend](./3.2_store-data-on-cell/images/web-fe.png)
+![Terminal CLI Execution Output](./3.2_store-data-on-cell/images/cliOutput.png)
 
 ### 3.3 Create DOB (Spore Protocol)
 ```
