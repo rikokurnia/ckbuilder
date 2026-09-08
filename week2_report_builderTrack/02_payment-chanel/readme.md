@@ -8,7 +8,7 @@
 
 ## 🧭 Executive Overview
 
-Nervos CKB is architecturally separated into **Layer 1 (L1: Common Knowledge Base)** and **Layer 2 (L2: Off-Chain Scaling)**. 
+Nervos CKB is architecturally separated into **Layer 1 (L1: Common Knowledge Base)** and **Layer 2 (L2: Off-Chain Scaling)**:
 - **Layer 1** focuses on maximal decentralization, proof-of-work security, and immutable state verification via the **Cell Model**.
 - **Layer 2** scales transactional bandwidth to unlimited throughput and near-zero latency by performing state transitions off-chain in peer-to-peer payment channels, anchoring only the final settlement back to Layer 1.
 
@@ -23,7 +23,7 @@ On CKB, the two premier payment channel solutions are:
 | Sub-Module | Focus Area | Technology | Status | Sub-Report Link |
 | :--- | :--- | :--- | :---: | :--- |
 | **01 - Fiber Basic** | Lightning-Compatible Payment Channels & Multi-Hop HTLCs | P2P Channels, 2-of-2 Multisig Cell, HTLC Routing | 🟢 **Complete** | [👉 Click here to explore fiber-basic](./fiber-basic/readme.md) |
-| **02 - Perun Basic** | Generalized State Channels & Cross-Chain Swaps | Virtual Channels, Multi-Party State | 🟡 **Next Up** | [👉 Click here to explore perun-basic](./perun-basic/readme.md) |
+| **02 - Perun Basic** | Generalized State Channels & Cross-Chain Swaps | Virtual Channels, Multi-Party State, Two-Phase Dispute | 🟢 **Complete** | [👉 Click here to explore perun-basic](./perun-basic/readme.md) |
 
 ---
 
@@ -39,10 +39,10 @@ On CKB, the two premier payment channel solutions are:
 │   └── Perun Network (Generalized state transitions, virtual channels)       │
 │                               ▲                                             │
 │               Off-Chain P2P   │   Sub-second Finality / 0 L1 Gas            │
-│               State Exchange  │   Cryptographic Revocation Keys             │
+│               State Exchange  │   Cryptographic Revocation & State Sigs     │
 │                               ▼                                             │
 │   🛡️ LAYER 1: Nervos CKB (On-Chain Verification & Settlement)               │
-│   ├── 2-of-2 Multisig Channel Funding Cells                                 │
+│   ├── 2-of-2 Multisig Channel Funding Cells & Perun Channel Cells           │
 │   ├── Dispute Resolution & Watchtower Justice Branches                      │
 │   └── Cooperative Closing & Net Capacity Payout                             │
 │                                                                             │
@@ -66,6 +66,6 @@ On CKB, the two premier payment channel solutions are:
 
 ## 🚀 Getting Started
 
-Explore the detailed sub-modules:
+Explore both detailed sub-modules:
 - [👉 Click here to view the Fiber Network Report & Simulation](./fiber-basic/readme.md)
-- [👉 Click here to view the Perun Network Report](./perun-basic/readme.md)
+- [👉 Click here to view the Perun Network Report & Simulation](./perun-basic/readme.md)

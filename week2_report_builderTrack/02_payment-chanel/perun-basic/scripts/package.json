@@ -1,0 +1,21 @@
+{
+  "name": "perun-basic-scripts",
+  "version": "1.0.0",
+  "description": "Perun State Channels (Multi-Party, Virtual Channels, and Two-Phase Dispute) Simulation on CKB",
+  "main": "dist/perun_simulation.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/perun_simulation.ts"
+  },
+  "keywords": ["nervos", "ckb", "perun-network", "state-channels", "virtual-channels", "dispute-resolution"],
+  "author": "Riko Kurnia Sandi",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.19.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
