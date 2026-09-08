@@ -1,0 +1,21 @@
+{
+  "name": "fiber-basic-scripts",
+  "version": "1.0.0",
+  "description": "Fiber Network (Lightning on CKB) Channel Lifecycle and Multi-Hop HTLC Simulation",
+  "main": "dist/fiber_simulation.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/fiber_simulation.ts"
+  },
+  "keywords": ["nervos", "ckb", "fiber-network", "lightning-network", "payment-channels", "htlc"],
+  "author": "Riko Kurnia Sandi",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.19.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
