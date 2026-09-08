@@ -1,0 +1,31 @@
+{
+  "name": "agent-bounty-services",
+  "version": "1.0.0",
+  "description": "Fiber Network Hold Invoice Engine & Gemini Flash AI Worker for AgentBounty",
+  "main": "dist/simulate_bounty.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/simulate_bounty.ts",
+    "test": "ts-node src/simulate_bounty.ts"
+  },
+  "keywords": [
+    "ckb",
+    "fiber-network",
+    "hold-invoice",
+    "htlc",
+    "ai-agent",
+    "gemini-flash",
+    "nervos"
+  ],
+  "author": "Riko Kurnia Sandi",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.19.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
