@@ -29,8 +29,8 @@ export class GeminiFlashClient {
 
   constructor(apiKey?: string, model?: string) {
     this.apiKey = apiKey || process.env.GEMINI_API_KEY || '';
-    // User requested explicit Flash model (defaults to gemini-1.5-flash)
-    this.model = model || process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+    // User requested explicit Gemini 3.5+ model (defaults to gemini-3.5-flash)
+    this.model = model || process.env.GEMINI_MODEL || 'gemini-3.5-flash';
   }
 
   public getModel(): string {

@@ -17,7 +17,7 @@ export async function callGeminiFlash(
 ): Promise<GeminiResponse> {
   const startTime = Date.now();
   const apiKey = customApiKey || process.env.GEMINI_API_KEY || '';
-  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
 
   // 1. Generate 32-byte secret Preimage P and target Payment Hash H = SHA-256(P)
   const preimageBytes = crypto.randomBytes(32);
