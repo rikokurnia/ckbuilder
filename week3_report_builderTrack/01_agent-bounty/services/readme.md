@@ -20,7 +20,7 @@ sequenceDiagram
     Worker->>Fiber: lockHoldInvoice(invoiceId, workerPubkey)
     Fiber-->>Worker: Channel Capacity Held (Status: HELD)
 
-    Worker->>Gemini: executeTask(prompt, category, model='gemini-1.5-flash')
+    Worker->>Gemini: executeTask(prompt, category, model='gemini-3.5-flash')
     Gemini-->>Worker: AI Security Audit Report + Tokens
 
     Worker->>Fiber: settleHoldInvoice(invoiceId, preimage)
@@ -40,8 +40,8 @@ sequenceDiagram
 - **`cancelHoldInvoice`**: Reclaims 100% capacity back to the creator if the task times out or is rejected.
 
 ### 2. `GeminiFlashClient` ([`src/gemini_client.ts`](./src/gemini_client.ts))
-- Configured to use the high-speed, cost-efficient **Gemini Flash** model (`gemini-1.5-flash` or `gemini-2.5-flash`).
-- Reads `GEMINI_API_KEY` from `.env`.
+- Configured to use the latest high-speed, cost-efficient **Gemini 3.5+ Flash** model (`gemini-3.5-flash`).
+- Reads `GEMINI_API_KEY` and `GEMINI_MODEL` from `.env`.
 - Generates a cryptographically secure 32-byte secret preimage $P$ and its hash $H$.
 - Includes a built-in local autonomous security engine fallback for offline development and testing.
 
