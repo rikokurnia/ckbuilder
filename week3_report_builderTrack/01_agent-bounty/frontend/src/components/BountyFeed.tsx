@@ -164,7 +164,7 @@ export function BountyFeed({
                         }`}
                       >
                         <Sparkles className={`w-3.5 h-3.5 ${isExecuting ? "animate-spin" : ""}`} />
-                        <span>{isExecuting ? "AI Solving..." : "Deploy Sentinel AI"}</span>
+                        <span>{isExecuting ? "Executing Task..." : "Dispatch Agent Worker"}</span>
                       </button>
                     )}
                   </div>

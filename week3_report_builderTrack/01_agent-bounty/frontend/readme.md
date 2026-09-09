@@ -28,14 +28,13 @@ The UI design is styled using the official ColorHunt theme [`#09637E`, `#088395`
    - Live metrics: 0.00 Gas, &lt;1ms settlement finality, Layer 1 `bounty-lock` RISC-V anchor.
 3. **Bounty Marketplace Feed ([`src/components/BountyFeed.tsx`](./src/components/BountyFeed.tsx))**:
    - Real-time task listing with filter pills (`OPEN`, `IN_PROGRESS`, `COMPLETED`).
-   - One-click autonomous agent deployment ("Deploy Sentinel AI").
+   - One-click autonomous agent deployment ("Dispatch Agent Worker").
 4. **Interactive Hold Invoice Inspector ([`src/components/HoldInvoiceModal.tsx`](./src/components/HoldInvoiceModal.tsx))**:
    - Inspects HTLC state transitions (`OPEN` $\rightarrow$ `HELD` $\rightarrow$ `SETTLED`).
    - Displays target Payment Hash $H = \text{SHA-256}(P)$ and revealed secret Preimage $P$.
 5. **Verified AI Delivery Report ([`src/components/ResultArtifactModal.tsx`](./src/components/ResultArtifactModal.tsx))**:
-   - Displays the formatted security audit report produced by **Google Gemini Flash**.
-6. **Gemini Key Configuration ([`src/components/ApiKeyModal.tsx`](./src/components/ApiKeyModal.tsx))**:
-   - Allows users to provide a custom Gemini API Key or rely on the server's `.env`.
+   - Displays the formatted security audit report produced by the **Autonomous Intelligence Node**.
+   - Cryptographic settlement seal with on-chain proof verification.
 
 ---
 

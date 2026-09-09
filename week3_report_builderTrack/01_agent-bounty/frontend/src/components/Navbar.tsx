@@ -2,17 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useCcc, useSigner, ccc } from "@ckb-ccc/connector-react";
-import { Wallet, ShieldAlert, PlusCircle, Key, Zap, Check, Copy } from "lucide-react";
+import { Wallet, ShieldAlert, PlusCircle, Zap, Check, Copy } from "lucide-react";
 import { ChannelStats } from "@/lib/types";
 
 interface NavbarProps {
   channel: ChannelStats | null;
   onOpenCreateModal: () => void;
-  onOpenKeyModal: () => void;
-  hasCustomKey: boolean;
 }
 
-export function Navbar({ channel, onOpenCreateModal, onOpenKeyModal, hasCustomKey }: NavbarProps) {
+export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
   const { open, disconnect, client } = useCcc();
   const signer = useSigner();
   const [address, setAddress] = useState<string>("");
@@ -77,21 +75,6 @@ export function Navbar({ channel, onOpenCreateModal, onOpenKeyModal, hasCustomKe
 
         {/* Action Controls & Wallet */}
         <div className="flex items-center space-x-3">
-          {/* API Key Modal Button */}
-          <button
-            onClick={onOpenKeyModal}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
-              hasCustomKey
-                ? "bg-bounty-cerulean text-bounty-ice border-bounty-sage/50 shadow-sm"
-                : "bg-bounty-deep/80 text-bounty-sage hover:text-bounty-ice border-bounty-sage/30 hover:border-bounty-cerulean"
-            }`}
-            title="Configure Gemini Flash API Key"
-          >
-            <Key className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Gemini Key</span>
-            {hasCustomKey && <span className="w-2 h-2 rounded-full bg-emerald-400"></span>}
-          </button>
-
           {/* Create Bounty Button */}
           <button
             onClick={onOpenCreateModal}

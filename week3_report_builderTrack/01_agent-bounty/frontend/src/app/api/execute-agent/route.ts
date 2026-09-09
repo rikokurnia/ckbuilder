@@ -5,7 +5,7 @@ import { callGeminiFlash } from '@/lib/gemini';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { taskId, apiKey, workerName = 'Sentinel-Flash AI' } = body;
+    const { taskId, apiKey, workerName = 'Autonomous Sentinel Node' } = body;
 
     const task = fiberStore.getBounty(taskId);
     if (!task) {

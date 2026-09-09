@@ -30,7 +30,7 @@ class FiberStore {
       amountCkb: 500,
       taskId: 'task_seed_01',
       creatorPubkey: 'ckb1_creator_alice',
-      workerPubkey: 'ckb1_sentinel_flash',
+      workerPubkey: 'ckb1_autonomous_agent_01',
       status: 'SETTLED',
       createdAt: Date.now() - 3600000,
       settledAt: Date.now() - 3590000,
@@ -48,8 +48,8 @@ class FiberStore {
       invoiceId: inv1.id,
       paymentHash: sampleHash,
       status: 'COMPLETED',
-      resultArtifact: `### 🛡️ Audit Report: simple-guard Contract\n- **Status**: PASSED with 0 Critical Vulnerabilities\n- **Capacity Check**: Properly uses QueryIter to sum inputs & outputs.\n- **Binary Footprint**: 13 KB stripped RISC-V binary.\n- **Recommendation**: Ensure witness args boundary checking is enforced in all unlock paths.`,
-      completedBy: 'Sentinel-Flash AI',
+      resultArtifact: `### 🛡️ Security Audit Report: simple-guard Contract\n- **Status**: PASSED with 0 Critical Vulnerabilities\n- **Capacity Check**: Properly uses QueryIter to sum inputs & outputs.\n- **Binary Footprint**: 13 KB stripped RISC-V binary.\n- **Recommendation**: Ensure witness args boundary checking is enforced in all unlock paths.`,
+      completedBy: 'Autonomous Sentinel Node',
       createdAt: Date.now() - 3600000,
     };
     this.bounties.set(task1.id, task1);

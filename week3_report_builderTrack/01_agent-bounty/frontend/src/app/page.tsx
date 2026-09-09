@@ -8,7 +8,6 @@ import { BountyFeed } from "@/components/BountyFeed";
 import { CreateBountyModal } from "@/components/CreateBountyModal";
 import { HoldInvoiceModal } from "@/components/HoldInvoiceModal";
 import { ResultArtifactModal } from "@/components/ResultArtifactModal";
-import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { BountyTask, HoldInvoice, ChannelStats } from "@/lib/types";
 import { Shield, Zap, Sparkles, BookOpen, ExternalLink, RefreshCw, Cpu, CheckCircle } from "lucide-react";
 
@@ -23,22 +22,12 @@ export default function Home() {
 
   // Modals state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isKeyOpen, setIsKeyOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<HoldInvoice | null>(null);
   const [selectedArtifactTask, setSelectedArtifactTask] = useState<BountyTask | null>(null);
 
   // Execution state
   const [executingTaskId, setExecutingTaskId] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState<string>("");
   const [notification, setNotification] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
-
-  // Load saved API key from localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("agentbounty_gemini_key");
-      if (saved) setApiKey(saved);
-    }
-  }, []);
 
   // Fetch connected address
   useEffect(() => {
@@ -79,14 +68,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const saveApiKey = (key: string) => {
-    setApiKey(key);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("agentbounty_gemini_key", key);
-    }
-    showToast("Gemini Flash API Key saved successfully!", "success");
-  };
-
   const showToast = (message: string, type: "success" | "info" | "error" = "info") => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 4000);
@@ -95,7 +76,7 @@ export default function Home() {
   // Deploy AI agent to solve a task
   const handleExecuteAgent = async (taskId: string) => {
     setExecutingTaskId(taskId);
-    showToast("Deploying Sentinel-Flash AI Worker & locking Fiber Hold Invoice...", "info");
+    showToast("Dispatching Autonomous Intelligence Node & escrowing Fiber Hold Invoice...", "info");
 
     try {
       const res = await fetch("/api/execute-agent", {
@@ -103,8 +84,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           taskId,
-          apiKey,
-          workerName: "Sentinel-Flash AI",
+          workerName: "Autonomous Sentinel Node",
         }),
       });
 
@@ -117,7 +97,7 @@ export default function Home() {
       const updatedTask = json.data.task;
       setSelectedArtifactTask(updatedTask);
       showToast(
-        `Bounty Completed! Preimage verified & ${updatedTask.rewardCkb} CKB settled in <1ms!`,
+        `Bounty Completed! Cryptographic Preimage verified & ${updatedTask.rewardCkb} CKB settled in <1ms!`,
         "success"
       );
     } catch (err: any) {
@@ -133,8 +113,6 @@ export default function Home() {
       <Navbar
         channel={channel}
         onOpenCreateModal={() => setIsCreateOpen(true)}
-        onOpenKeyModal={() => setIsKeyOpen(true)}
-        hasCustomKey={Boolean(apiKey)}
       />
 
       {/* Floating Notification Toast */}
@@ -163,15 +141,15 @@ export default function Home() {
           <div className="relative z-10 max-w-3xl space-y-3">
             <div className="inline-flex items-center space-x-2 bg-bounty-ice/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-bounty-ice border border-bounty-sage/30">
               <Cpu className="w-3.5 h-3.5 text-bounty-sage" />
-              <span>Nervos CKB Builder Track — Week 2 Capstone</span>
+              <span>Nervos CKB &amp; Fiber Network — Autonomous Machine Economy</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              Zero-Trust Autonomous AI Labor Market
+              Zero-Trust Autonomous AI Labor Marketplace
             </h1>
 
             <p className="text-xs sm:text-sm text-bounty-ice/85 leading-relaxed">
-              Eliminating the <em>fair-exchange dilemma</em> in machine-to-machine payments. Creators lock bounty capacity into off-chain <strong>Fiber Hold Invoices</strong>, and autonomous AI agents (powered by <strong>Gemini Flash</strong>) deliver verified work sealed with cryptographic preimages for sub-second atomic settlement.
+              Solving the <em>fair-exchange dilemma</em> in machine-to-machine economies. Task creators escrow bounty liquidity into off-chain <strong>Fiber Hold Invoices</strong>, while autonomous intelligence agents execute verifiable computational tasks, delivering cryptographic preimages for sub-second atomic settlement on Nervos CKB.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-3 text-xs">
@@ -224,7 +202,7 @@ export default function Home() {
               <Shield className="w-4 h-4 text-bounty-cerulean" />
               <span>Full-Stack Technical Architecture Overview</span>
             </h3>
-            <span className="text-[11px] text-bounty-sage font-mono">Week 2 Sinergy</span>
+            <span className="text-[11px] text-bounty-sage font-mono">Zero-Trust Architecture</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -251,10 +229,10 @@ export default function Home() {
             <div className="p-4 rounded-xl bg-bounty-ice/50 border border-bounty-sage/30 space-y-2">
               <div className="font-bold text-emerald-700 flex items-center space-x-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>Worker: Gemini Flash Engine</span>
+                <span>Worker: Autonomous Intelligence Node</span>
               </div>
               <p className="text-bounty-deep/80 text-[11px] leading-relaxed">
-                Autonomous agent reasoning with <strong>Google Gemini Flash</strong>. Direct API Key integration with deterministic local autonomous fallback.
+                High-throughput autonomous agent reasoning and security verification engine. Generates cryptographically verifiable outputs and reveals matching preimages for instant off-chain finality.
               </p>
             </div>
           </div>
@@ -273,7 +251,7 @@ export default function Home() {
             <span>•</span>
             <span>Fiber Network v0.9.0</span>
             <span>•</span>
-            <span>Gemini Flash</span>
+            <span>Autonomous Intelligence Engine</span>
             <span>•</span>
             <span>CCC Connector</span>
           </div>
@@ -299,13 +277,6 @@ export default function Home() {
       <ResultArtifactModal
         task={selectedArtifactTask}
         onClose={() => setSelectedArtifactTask(null)}
-      />
-
-      <ApiKeyModal
-        isOpen={isKeyOpen}
-        onClose={() => setIsKeyOpen(false)}
-        onSave={saveApiKey}
-        initialKey={apiKey}
       />
     </div>
   );
