@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useCcc, useSigner, ccc } from "@ckb-ccc/connector-react";
-import { Wallet, ShieldAlert, PlusCircle, Zap, Check, Copy } from "lucide-react";
+import { Wallet, ShieldAlert, PlusCircle, Zap, Check, Copy, RefreshCw } from "lucide-react";
 import { ChannelStats } from "@/lib/types";
 
 interface NavbarProps {
@@ -16,34 +16,36 @@ export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
   const [address, setAddress] = useState<string>("");
   const [balance, setBalance] = useState<string>("0");
   const [copied, setCopied] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchAccount = async () => {
+    if (!signer) {
+      setAddress("");
+      setBalance("0");
+      return;
+    }
+    try {
+      setIsRefreshing(true);
+      const addr = await signer.getRecommendedAddress();
+      const script = (await signer.getRecommendedAddressObj()).script;
+      setAddress(addr);
+
+      let sum = 0n;
+      for await (const cell of client.findCells({ script, scriptType: "lock", scriptSearchMode: "exact" })) {
+        sum += cell.cellOutput.capacity;
+      }
+      setBalance(ccc.fixedPointToString(sum));
+    } catch (err) {
+      console.error("Error fetching signer details:", err);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    async function fetchAccount() {
-      if (!signer) {
-        setAddress("");
-        setBalance("0");
-        return;
-      }
-      try {
-        const addr = await signer.getRecommendedAddress();
-        const script = (await signer.getRecommendedAddressObj()).script;
-        if (!isMounted) return;
-        setAddress(addr);
-
-        let sum = 0n;
-        for await (const cell of client.findCells({ script, scriptType: "lock", scriptSearchMode: "exact" })) {
-          sum += cell.cellOutput.capacity;
-        }
-        if (isMounted) setBalance(ccc.fixedPointToString(sum));
-      } catch (err) {
-        console.error("Error fetching signer details:", err);
-      }
-    }
     fetchAccount();
-    return () => {
-      isMounted = false;
-    };
+    const interval = setInterval(fetchAccount, 10000);
+    return () => clearInterval(interval);
   }, [signer, client]);
 
   const copyAddress = () => {
@@ -102,8 +104,15 @@ export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
                     {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                   </button>
                 </div>
-                <div className="text-[10px] text-bounty-sage">
-                  {parseFloat(balance).toFixed(2)} CKB
+                <div className="text-[10px] text-bounty-sage flex items-center justify-end space-x-1">
+                  <span>{parseFloat(balance).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CKB</span>
+                  <button
+                    onClick={fetchAccount}
+                    title="Refresh CKB Balance"
+                    className="hover:text-bounty-ice transition-transform active:rotate-180 p-0.5"
+                  >
+                    <RefreshCw className={`w-2.5 h-2.5 ${isRefreshing ? "animate-spin text-bounty-cerulean" : ""}`} />
+                  </button>
                 </div>
               </div>
               <button
