@@ -84,6 +84,9 @@ class FiberStore {
       throw new Error(`Insufficient channel capacity. Required: ${rewardCkb} CKB, Available: ${this.channel.creatorBalanceCkb} CKB`);
     }
 
+    // Immediately escrow reward capacity from creator's available channel balance
+    this.channel.creatorBalanceCkb -= rewardCkb;
+
     const taskId = `task_${Date.now().toString(36)}`;
     const invoiceId = `fnn_inv_${crypto.randomBytes(6).toString('hex')}`;
 
@@ -127,12 +130,7 @@ class FiberStore {
     if (!invoice) throw new Error('Invoice not found');
     if (invoice.status !== 'OPEN') throw new Error(`Invoice not open: ${invoice.status}`);
 
-    if (this.channel.creatorBalanceCkb < invoice.amountCkb) {
-      throw new Error('Not enough creator balance in channel');
-    }
-
-    // Lock capacity into HTLC escrow
-    this.channel.creatorBalanceCkb -= invoice.amountCkb;
+    // Mark as HELD in HTLC escrow (capacity was already isolated at creation)
     invoice.status = 'HELD';
     invoice.workerPubkey = workerPubkey;
 
@@ -178,7 +176,7 @@ class FiberStore {
     if (!invoice) throw new Error('Invoice not found');
     if (invoice.status === 'SETTLED') throw new Error('Cannot cancel settled invoice');
 
-    if (invoice.status === 'HELD') {
+    if (invoice.status === 'OPEN' || invoice.status === 'HELD') {
       this.channel.creatorBalanceCkb += invoice.amountCkb;
     }
 

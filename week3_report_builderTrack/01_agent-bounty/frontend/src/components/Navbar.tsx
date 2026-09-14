@@ -8,20 +8,21 @@ import { ChannelStats } from "@/lib/types";
 interface NavbarProps {
   channel: ChannelStats | null;
   onOpenCreateModal: () => void;
+  creatorSpentCkb?: number;
 }
 
-export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
+export function Navbar({ channel, onOpenCreateModal, creatorSpentCkb = 0 }: NavbarProps) {
   const { open, disconnect, client } = useCcc();
   const signer = useSigner();
   const [address, setAddress] = useState<string>("");
-  const [balance, setBalance] = useState<string>("0");
+  const [rawBalance, setRawBalance] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchAccount = async () => {
     if (!signer) {
       setAddress("");
-      setBalance("0");
+      setRawBalance(0);
       return;
     }
     try {
@@ -34,7 +35,8 @@ export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
       for await (const cell of client.findCells({ script, scriptType: "lock", scriptSearchMode: "exact" })) {
         sum += cell.cellOutput.capacity;
       }
-      setBalance(ccc.fixedPointToString(sum));
+      const raw = parseFloat(ccc.fixedPointToString(sum)) || 0;
+      setRawBalance(raw);
     } catch (err) {
       console.error("Error fetching signer details:", err);
     } finally {
@@ -47,6 +49,8 @@ export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
     const interval = setInterval(fetchAccount, 10000);
     return () => clearInterval(interval);
   }, [signer, client]);
+
+  const effectiveBalance = Math.max(0, rawBalance - creatorSpentCkb);
 
   const copyAddress = () => {
     if (!address) return;
@@ -105,7 +109,7 @@ export function Navbar({ channel, onOpenCreateModal }: NavbarProps) {
                   </button>
                 </div>
                 <div className="text-[10px] text-bounty-sage flex items-center justify-end space-x-1">
-                  <span>{parseFloat(balance).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CKB</span>
+                  <span>{effectiveBalance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CKB</span>
                   <button
                     onClick={fetchAccount}
                     title="Refresh CKB Balance"

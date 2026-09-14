@@ -107,12 +107,23 @@ export default function Home() {
     }
   };
 
+  // Compute total bounty rewards committed by creator (excluding seed demo task)
+  const creatorSpentCkb = bounties
+    .filter((b) => b.id !== "task_seed_01" && (
+      !address || 
+      b.creator === address || 
+      b.creator?.toLowerCase() === address.toLowerCase() || 
+      b.creator === "ckb1_connected_wallet"
+    ))
+    .reduce((acc, b) => acc + b.rewardCkb, 0);
+
   return (
     <div className="min-h-screen flex flex-col bg-bounty-ice">
       {/* Top Navigation */}
       <Navbar
         channel={channel}
         onOpenCreateModal={() => setIsCreateOpen(true)}
+        creatorSpentCkb={creatorSpentCkb}
       />
 
       {/* Floating Notification Toast */}
