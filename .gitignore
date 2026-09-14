@@ -6,3 +6,9 @@ node_modules/
 CKB_Summary_BlockDev*
 CKB_summaryBlockdev*
 *.docx
+.gstack/
+random_things/
+random/
+learn-ckb/
+myobjective/
+*.pdf
