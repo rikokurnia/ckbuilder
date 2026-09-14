@@ -1,4 +1,4 @@
-# 🏆 Week 3 Builder Track Master Report
+# Week 3 Builder Track Master Report
 
 **Name Builder**: Riko Kurnia Sandi  
 **Track**: CKB Builder Track  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🌟 Executive Summary
+## Executive Summary
 
 Week 3 shifts focus into **production-grade dApp engineering for the emerging Machine & AI Economy**. Grounded in recent research on machine payments and Layer 2 channels, Week 3 explores:
 1. **Machine-to-Machine (M2M) Payment Protocols**: How autonomous software entities execute micro-transactions without human manual signing or conventional banking rails.
@@ -15,9 +15,9 @@ Week 3 shifts focus into **production-grade dApp engineering for the emerging Ma
 
 ---
 
-## 1️⃣ 01 - AgentBounty: Autonomous AI Labor Market
+## 01 - AgentBounty: Autonomous AI Labor Market
 
-> 📂 **Sub-Report & Codebase**: [👉 Click here to view 01_agent-bounty Documentation](./01_agent-bounty/readme.md)
+> **Sub-Report & Codebase**: [View 01_agent-bounty Documentation](./01_agent-bounty/readme.md)
 
 **Objective**: Build an autonomous AI task marketplace solving the *fair-exchange dilemma* in machine payments using Fiber Network Hold Invoices and CKB smart contracts, inspired by the Nervos 2026 Opportunity Map research.
 
@@ -39,7 +39,7 @@ Week 3 shifts focus into **production-grade dApp engineering for the emerging Ma
 
 ---
 
-## 📂 Project Structure & Navigation
+## Project Structure & Navigation
 
-- 📁 **`week3_report_builderTrack/`** — Master Directory
-  - [👉 Click here to explore 01_agent-bounty](./01_agent-bounty/) — Full-stack autonomous AI task marketplace (Rust Contract + Fiber Engine + Gemini Flash + Next.js 14 dApp)
+- **`week3_report_builderTrack/`** — Master Directory
+  - [01_agent-bounty](./01_agent-bounty/) — Full-stack autonomous AI task marketplace (Rust Contract + Fiber Engine + Gemini Flash + Next.js 14 dApp)

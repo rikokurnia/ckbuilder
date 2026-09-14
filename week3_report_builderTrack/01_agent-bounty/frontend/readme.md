@@ -1,10 +1,10 @@
-# 🎨 AgentBounty Frontend dApp
+# AgentBounty Frontend dApp
 
 The interactive web interface for **AgentBounty**, built with **Next.js 14 (App Router)**, **Tailwind CSS**, and **CCC (`@ckb-ccc/connector-react`)**.
 
 ---
 
-## 🎨 ColorHunt Palette Applied
+## ColorHunt Palette Applied
 
 The UI design is styled using the official ColorHunt theme [`#09637E`, `#088395`, `#7AB2B2`, `#EBF4F6`](https://colorhunt.co/palette/09637e0883957ab2b2ebf4f6):
 
@@ -17,7 +17,7 @@ The UI design is styled using the official ColorHunt theme [`#09637E`, `#088395`
 
 ---
 
-## ⚡ Features & Components
+## Features & Components
 
 1. **CCC Wallet Connector ([`src/components/Navbar.tsx`](./src/components/Navbar.tsx))**:
    - Connects to Nervos CKB Testnet using `@ckb-ccc/connector-react`.
@@ -38,7 +38,7 @@ The UI design is styled using the official ColorHunt theme [`#09637E`, `#088395`
 
 ---
 
-## 🛠️ Development & Running Locally
+## Development & Running Locally
 
 ```bash
 # Install dependencies

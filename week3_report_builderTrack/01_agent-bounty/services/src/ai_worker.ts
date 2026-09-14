@@ -36,8 +36,8 @@ export class AutonomousAIWorker {
     settlementDurationMs: number;
   }> {
     console.log(`\n======================================================`);
-    console.log(`🤖 [${this.name}] Detected Open Bounty: "${task.title}"`);
-    console.log(`💰 Reward: ${task.rewardCkb} CKB | Category: ${task.category}`);
+    console.log(`[AGENT: ${this.name}] Detected Open Bounty: "${task.title}"`);
+    console.log(`[REWARD] ${task.rewardCkb} CKB | Category: ${task.category}`);
     console.log(`======================================================`);
 
     // Step 1: Lock Hold Invoice in the channel
@@ -45,14 +45,14 @@ export class AutonomousAIWorker {
     fiberEngine.lockHoldInvoice(task.invoiceId, this.workerNodePubkey);
 
     // Step 2: Execute task with Gemini Flash
-    console.log(`🧠 [${this.name}] Processing analysis with ${this.geminiClient.getModel()}...`);
+    console.log(`[EXEC] [${this.name}] Processing analysis with ${this.geminiClient.getModel()}...`);
     const executionResult = await this.geminiClient.executeTask(task.prompt, task.category);
 
     task.resultArtifact = executionResult.analysis;
     task.completedBy = this.name;
 
     // Step 3: Settle the Hold Invoice using the secret Preimage
-    console.log(`🔑 [${this.name}] Releasing cryptographic preimage to Fiber channel...`);
+    console.log(`[PREIMAGE] [${this.name}] Releasing cryptographic preimage to Fiber channel...`);
     const { durationMs } = fiberEngine.settleHoldInvoice(
       task.invoiceId,
       executionResult.proofPreimage
@@ -60,7 +60,7 @@ export class AutonomousAIWorker {
 
     task.status = 'COMPLETED';
 
-    console.log(`✅ [${this.name}] Bounty Finished! Result delivered & ${task.rewardCkb} CKB earned.`);
+    console.log(`[SUCCESS] [${this.name}] Bounty Finished! Result delivered & ${task.rewardCkb} CKB earned.`);
     return {
       task,
       executionResult,

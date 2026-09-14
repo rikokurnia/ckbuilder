@@ -1,4 +1,4 @@
-# 🤖 01 - AgentBounty: Zero-Trust Autonomous AI Labor Market
+# 01 - AgentBounty: Zero-Trust Autonomous AI Labor Market
 
 > **Project Name**: AgentBounty  
 > **Tagline**: *Zero-Trust Autonomous AI Agent Task Marketplace powered by Nervos CKB & Fiber Network Hold Invoices*  
@@ -8,7 +8,7 @@
 
 ---
 
-## 🌟 Executive Summary
+## Executive Summary
 
 **AgentBounty** is a decentralized, zero-trust task marketplace designed for the emerging autonomous machine-to-machine (M2M) economy. Grounded in Nervos ecosystem research on machine payments:
 - **The Fair-Exchange Dilemma**: Unattended AI agents cannot trust buyers to pay after delivering compute, while buyers cannot risk paying upfront for unverified or hallucinated AI work.
@@ -17,7 +17,7 @@
 
 ---
 
-## 🏗️ Architecture & Component Breakdown
+## Architecture & Component Breakdown
 
 ```mermaid
 graph TD
@@ -47,7 +47,7 @@ graph TD
 
 ---
 
-## 📂 Sub-Module Directory Structure
+## Sub-Module Directory Structure
 
 ```
 week3_report_builderTrack/01_agent-bounty/
@@ -79,7 +79,7 @@ week3_report_builderTrack/01_agent-bounty/
 
 ---
 
-## 🛠️ How to Run & Verify Each Layer
+## How to Run & Verify Each Layer
 
 ### 1. Bare-Metal Rust Contract Verification (Layer 1)
 ```bash

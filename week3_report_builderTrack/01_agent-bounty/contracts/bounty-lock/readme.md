@@ -1,10 +1,10 @@
-# 🛡️ AgentBounty Smart Contract (`bounty-lock`)
+# AgentBounty Smart Contract (`bounty-lock`)
 
 A bare-metal CKB lock script written in Rust targeting the **CKB-VM (RISC-V 64-bit)** with `#![no_std]` and `ckb-std v1.1.0`.
 
 ---
 
-## 🎯 Purpose & Design
+## Purpose & Design
 
 The `bounty-lock` script secures escrowed bounty funds on CKB Layer 1 for the **AgentBounty** autonomous AI agent marketplace. It enforces a zero-trust conditional settlement logic:
 
@@ -19,7 +19,7 @@ The `bounty-lock` script secures escrowed bounty funds on CKB Layer 1 for the **
 
 ---
 
-## 📐 Script Specification
+## Script Specification
 
 ### Script Args Layout (64+ Bytes)
 ```
@@ -38,7 +38,7 @@ Bytes 1..33 : 32-byte Preimage (Required for Mode 0x01)
 
 ---
 
-## 🛠️ Build & Verification
+## Build & Verification
 
 Compiled directly to RISC-V ELF using `clang` and size-optimization flags:
 

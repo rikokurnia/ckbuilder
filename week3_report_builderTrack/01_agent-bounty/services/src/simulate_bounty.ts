@@ -5,8 +5,8 @@ import { BountyTask } from './types';
 
 async function runSimulation() {
   console.log(`\n======================================================================`);
-  console.log(`🚀 AGENTBOUNTY: FIBER NETWORK & GEMINI FLASH AI SIMULATION`);
-  console.log(`   Nervos CKB Builder Track (Week 2 Capstone Module 03)`);
+  console.log(`[AGENTBOUNTY] FIBER NETWORK & GEMINI FLASH AI SIMULATION`);
+  console.log(`   Nervos CKB Builder Track (Week 3 Capstone Module 01)`);
   console.log(`======================================================================\n`);
 
   // Initialize Fiber Engine with channel capacities
@@ -25,7 +25,7 @@ async function runSimulation() {
   // SCENARIO 1: End-to-End Real AI Bounty Execution & Instant Settlement
   // =================================================================
   console.log(`----------------------------------------------------------------------`);
-  console.log(`📌 SCENARIO 1: Autonomous AI Work & Cryptographic Preimage Settlement`);
+  console.log(`[SCENARIO 1] Autonomous AI Work & Cryptographic Preimage Settlement`);
   console.log(`----------------------------------------------------------------------`);
 
   // 1. Creator generates expected payment hash H = SHA256(P)
@@ -71,7 +71,7 @@ Identify strengths, potential integer overflows, and Cell Model state invariants
 
   // 3. Worker executes task and settles via preimage
   // Note: For deterministic simulation of this specific task, we attach the matching preimage
-  console.log(`\n🤖 Worker starting processing...`);
+  console.log(`\n[WORKER] Worker starting processing...`);
   fiberEngine.lockHoldInvoice(task.invoiceId, aiWorker.workerNodePubkey);
   task.status = 'IN_PROGRESS';
 
@@ -80,17 +80,17 @@ Identify strengths, potential integer overflows, and Cell Model state invariants
   task.resultArtifact = execution.analysis;
   task.completedBy = aiWorker.name;
 
-  console.log(`\n📋 AI Generated Analysis Preview:`);
+  console.log(`\n[ARTIFACT] AI Generated Analysis Preview:`);
   console.log(execution.analysis.split('\n').slice(0, 8).join('\n') + '\n...');
 
-  console.log(`\n🔑 Releasing matching preimage to Fiber Network:`);
+  console.log(`\n[PREIMAGE] Releasing matching preimage to Fiber Network:`);
   console.log(`  - Target Hash:   ${samplePaymentHash}`);
   console.log(`  - Preimage (hex): ${samplePreimage.toString('hex')}`);
 
   const settleResult = fiberEngine.settleHoldInvoice(task.invoiceId, samplePreimage.toString('hex'));
   task.status = 'COMPLETED';
 
-  console.log(`\n💰 Channel Balance Post-Settlement:`);
+  console.log(`\n[BALANCES] Channel Balance Post-Settlement:`);
   let state = fiberEngine.getChannelState();
   console.log(`  - Creator Balance: ${state.creatorBalanceCkb} CKB (-${rewardAmount} CKB)`);
   console.log(`  - Worker Balance:  ${state.workerBalanceCkb} CKB (+${rewardAmount} CKB)`);
@@ -100,7 +100,7 @@ Identify strengths, potential integer overflows, and Cell Model state invariants
   // SCENARIO 2: Cryptographic Preimage Mismatch Protection
   // =================================================================
   console.log(`\n----------------------------------------------------------------------`);
-  console.log(`📌 SCENARIO 2: Malicious Preimage Rejection Defense`);
+  console.log(`[SCENARIO 2] Malicious Preimage Rejection Defense`);
   console.log(`----------------------------------------------------------------------`);
 
   const fakeInvoice = fiberEngine.createHoldInvoice(
@@ -112,31 +112,31 @@ Identify strengths, potential integer overflows, and Cell Model state invariants
   fiberEngine.lockHoldInvoice(fakeInvoice.id, 'ckb1_malicious_node');
 
   try {
-    console.log(`⚠️ Attacker attempting to settle with invalid preimage 'wrong_preimage'...`);
+    console.log(`[ATTACK] Attacker attempting to settle with invalid preimage 'wrong_preimage'...`);
     fiberEngine.settleHoldInvoice(fakeInvoice.id, Buffer.from('wrong_preimage').toString('hex'));
-    console.error(`❌ Error: Fraudulent settlement should have been blocked!`);
+    console.error(`[ERROR] Fraudulent settlement should have been blocked!`);
   } catch (err: any) {
-    console.log(`🛡️ Fraud Blocked by Fiber Engine: "${err.message}"`);
+    console.log(`[DEFENSE] Fraud Blocked by Fiber Engine: "${err.message}"`);
   }
 
   // =================================================================
   // SCENARIO 3: Timeout & Creator Refund
   // =================================================================
   console.log(`\n----------------------------------------------------------------------`);
-  console.log(`📌 SCENARIO 3: Worker Inactivity & Timeout Capacity Refund`);
+  console.log(`[SCENARIO 3] Worker Inactivity & Timeout Capacity Refund`);
   console.log(`----------------------------------------------------------------------`);
 
-  console.log(`⏰ Task timed out. Creator invoking cancelHoldInvoice...`);
+  console.log(`[TIMEOUT] Task timed out. Creator invoking cancelHoldInvoice...`);
   fiberEngine.cancelHoldInvoice(fakeInvoice.id, 'Task deadline expired without preimage submission');
 
   state = fiberEngine.getChannelState();
-  console.log(`🔄 Creator Capacity Fully Preserved: ${state.creatorBalanceCkb} CKB\n`);
+  console.log(`[REFUND] Creator Capacity Fully Preserved: ${state.creatorBalanceCkb} CKB\n`);
 
   // =================================================================
   // FINAL TELEMETRY REPORT
   // =================================================================
   console.log(`======================================================================`);
-  console.log(`📊 SIMULATION PERFORMANCE & METRICS SUMMARY`);
+  console.log(`[TELEMETRY] SIMULATION PERFORMANCE & METRICS SUMMARY`);
   console.log(`======================================================================`);
   console.log(`- Payment Rail:          Fiber Network (FNN) Multi-Hop Off-Chain Channels`);
   console.log(`- Conditional Protocol:  HTLC Hold Invoices (FIPS 180-4 SHA-256)`);

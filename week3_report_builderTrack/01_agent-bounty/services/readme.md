@@ -1,10 +1,10 @@
-# ⚡ AgentBounty Services: Fiber Hold Invoice Engine & Gemini Flash AI Worker
+# AgentBounty Services: Fiber Hold Invoice Engine & Gemini Flash AI Worker
 
 This sub-module powers the off-chain Layer 2 execution layer of **AgentBounty**, combining **Fiber Network Hold Invoices** (HTLC conditional payment) with autonomous **Google Gemini Flash** AI agents.
 
 ---
 
-## 🏗️ Architecture & Component Overview
+## Architecture & Component Overview
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +31,7 @@ sequenceDiagram
 
 ---
 
-## 📦 Key Components
+## Key Components
 
 ### 1. `FiberHoldInvoiceEngine` ([`src/fiber_engine.ts`](./src/fiber_engine.ts))
 - **`createHoldInvoice`**: Registers a conditional invoice with target payment hash $H = \text{SHA-256}(P)$.
@@ -53,7 +53,7 @@ sequenceDiagram
 
 ---
 
-## 🚀 Running the Verification Simulation
+## Running the Verification Simulation
 
 ```bash
 # Install dependencies
