@@ -150,8 +150,9 @@ export function HoldInvoiceModal({ invoice, onClose }: HoldInvoiceModalProps) {
                 {invoice.preimage}
               </div>
             ) : (
-              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 italic">
-                🔒 Hidden by Autonomous AI Worker. Will be revealed atomically upon task completion.
+              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 flex items-center space-x-1.5">
+                <Lock className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
+                <span>Hidden by Autonomous AI Worker. Revealed atomically upon task completion.</span>
               </div>
             )}
           </div>

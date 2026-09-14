@@ -48,7 +48,7 @@ class FiberStore {
       invoiceId: inv1.id,
       paymentHash: sampleHash,
       status: 'COMPLETED',
-      resultArtifact: `### 🛡️ Security Audit Report: simple-guard Contract\n- **Status**: PASSED with 0 Critical Vulnerabilities\n- **Capacity Check**: Properly uses QueryIter to sum inputs & outputs.\n- **Binary Footprint**: 13 KB stripped RISC-V binary.\n- **Recommendation**: Ensure witness args boundary checking is enforced in all unlock paths.`,
+      resultArtifact: `### Security Audit Report: simple-guard Contract\n- **Status**: PASSED with 0 Critical Vulnerabilities\n- **Capacity Check**: Properly uses QueryIter to sum inputs & outputs.\n- **Binary Footprint**: 13 KB stripped RISC-V binary.\n- **Recommendation**: Ensure witness args boundary checking is enforced in all unlock paths.`,
       completedBy: 'Autonomous Sentinel Node',
       createdAt: Date.now() - 3600000,
     };

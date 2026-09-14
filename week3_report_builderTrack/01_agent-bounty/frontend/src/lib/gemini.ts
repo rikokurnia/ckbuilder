@@ -97,7 +97,7 @@ Output a structured report with:
 
 function generateAutonomousReport(prompt: string, category: string): string {
   const timestamp = new Date().toISOString();
-  return `### 🛡️ Sentinel-Flash AI Autonomous Security Report
+  return `### Autonomous Agent Security Report
 **Task Classification**: ${category}
 **Timestamp**: ${timestamp}
 **Verification Rail**: Fiber Network (HTLC Preimage Verified)

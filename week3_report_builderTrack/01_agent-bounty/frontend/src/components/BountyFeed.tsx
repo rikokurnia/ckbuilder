@@ -2,15 +2,16 @@
 
 import React, { useState } from "react";
 import {
-  Sparkles,
   Lock,
   FileText,
   Clock,
   CheckCircle2,
   AlertCircle,
   ExternalLink,
-  Bot,
+  Layers,
   Zap,
+  Play,
+  RefreshCw,
 } from "lucide-react";
 import { BountyTask, HoldInvoice } from "@/lib/types";
 
@@ -47,15 +48,15 @@ export function BountyFeed({
       {/* Header & Filter Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-bounty-sage/30">
         <div className="flex items-center space-x-2">
-          <Bot className="w-5 h-5 text-bounty-deep" />
-          <h2 className="text-base font-extrabold text-bounty-dark">Active Bounty Marketplace</h2>
+          <Layers className="w-4 h-4 text-bounty-deep" />
+          <h2 className="text-sm font-bold text-bounty-dark">Task Marketplace</h2>
           <span className="text-xs bg-bounty-ice text-bounty-deep font-bold px-2 py-0.5 rounded-full border border-bounty-sage/40">
             {bounties.length}
           </span>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center space-x-1.5 text-xs bg-bounty-ice p-1 rounded-xl border border-bounty-sage/30">
+        <div className="flex items-center space-x-1 text-xs bg-bounty-ice p-1 rounded-xl border border-bounty-sage/30">
           {["ALL", "OPEN", "IN_PROGRESS", "COMPLETED"].map((st) => (
             <button
               key={st}
@@ -123,7 +124,7 @@ export function BountyFeed({
                     ) : task.status === "IN_PROGRESS" || isExecuting ? (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 animate-pulse">
                         <Clock className="w-3 h-3 mr-1 text-amber-600 animate-spin" />
-                        WORKING (HELD)
+                        HELD (L2)
                       </span>
                     ) : (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-bounty-ice text-bounty-deep border border-bounty-sage/40">
@@ -157,14 +158,18 @@ export function BountyFeed({
                       <button
                         onClick={() => onExecuteAgent(task.id)}
                         disabled={isExecuting}
-                        className={`flex items-center space-x-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all shadow-sm ${
+                        className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm ${
                           isExecuting
                             ? "bg-amber-500 text-white cursor-wait"
-                            : "bg-gradient-to-r from-bounty-cerulean to-bounty-deep hover:brightness-110 text-bounty-ice"
+                            : "bg-bounty-deep hover:bg-bounty-cerulean text-bounty-ice"
                         }`}
                       >
-                        <Sparkles className={`w-3.5 h-3.5 ${isExecuting ? "animate-spin" : ""}`} />
-                        <span>{isExecuting ? "Executing Task..." : "Dispatch Agent Worker"}</span>
+                        {isExecuting ? (
+                          <RefreshCw className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Play className="w-3 h-3 fill-current" />
+                        )}
+                        <span>{isExecuting ? "Executing..." : "Dispatch Agent"}</span>
                       </button>
                     )}
                   </div>

@@ -9,7 +9,7 @@ import { CreateBountyModal } from "@/components/CreateBountyModal";
 import { HoldInvoiceModal } from "@/components/HoldInvoiceModal";
 import { ResultArtifactModal } from "@/components/ResultArtifactModal";
 import { BountyTask, HoldInvoice, ChannelStats } from "@/lib/types";
-import { Shield, Zap, Sparkles, BookOpen, ExternalLink, RefreshCw, Cpu, CheckCircle } from "lucide-react";
+import { Zap, Sparkles, Cpu } from "lucide-react";
 
 export default function Home() {
   const signer = useSigner();
@@ -147,46 +147,30 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow space-y-8">
         
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-bounty-deep via-bounty-deep to-bounty-cerulean rounded-3xl p-6 sm:p-8 text-bounty-ice shadow-xl relative overflow-hidden">
-          <div className="relative z-10 max-w-3xl space-y-3">
-            <div className="inline-flex items-center space-x-2 bg-bounty-ice/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-bounty-ice border border-bounty-sage/30">
+        {/* Sleek Executive Header */}
+        <section className="bg-gradient-to-r from-bounty-deep to-bounty-cerulean rounded-2xl p-6 text-bounty-ice shadow-md border border-bounty-sage/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1.5 max-w-2xl">
+            <div className="flex items-center space-x-2 text-[11px] font-semibold text-bounty-sage tracking-wider uppercase">
               <Cpu className="w-3.5 h-3.5 text-bounty-sage" />
-              <span>Nervos CKB &amp; Fiber Network — Autonomous Machine Economy</span>
+              <span>Nervos CKB &amp; Fiber Network L2</span>
             </div>
-
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              Zero-Trust Autonomous AI Labor Marketplace
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+              AgentBounty Marketplace
             </h1>
-
-            <p className="text-xs sm:text-sm text-bounty-ice/85 leading-relaxed">
-              Solving the <em>fair-exchange dilemma</em> in machine-to-machine economies. Task creators escrow bounty liquidity into off-chain <strong>Fiber Hold Invoices</strong>, while autonomous intelligence agents execute verifiable computational tasks, delivering cryptographic preimages for sub-second atomic settlement on Nervos CKB.
+            <p className="text-xs text-bounty-ice/85 leading-relaxed">
+              Decentralized autonomous task escrow powered by CKB-VM contracts and off-chain HTLC Hold Invoices with sub-second atomic settlement.
             </p>
-
-            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs">
-              <a
-                href="https://talk.nervos.org/t/ai-machine-payments-and-fiber-in-2026-an-opportunity-map-for-ckb-and-fiber-developers/10665"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-bounty-ice text-bounty-dark font-bold hover:bg-white transition-all shadow-sm"
-              >
-                <BookOpen className="w-3.5 h-3.5 text-bounty-deep" />
-                <span>Nervos 2026 Opportunity Map</span>
-                <ExternalLink className="w-3 h-3 text-bounty-sage" />
-              </a>
-
-              <button
-                onClick={() => setIsCreateOpen(true)}
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-bounty-cerulean hover:bg-bounty-cerulean/80 text-bounty-ice font-bold transition-all border border-bounty-sage/40"
-              >
-                <Zap className="w-3.5 h-3.5" />
-                <span>Publish Bounty Task</span>
-              </button>
-            </div>
           </div>
 
-          {/* Decorative Background Accents */}
-          <div className="absolute right-0 bottom-0 w-80 h-80 bg-bounty-sage/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="flex items-center space-x-2.5 flex-shrink-0">
+            <button
+              onClick={() => setIsCreateOpen(true)}
+              className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-bounty-ice text-bounty-dark font-bold text-xs hover:bg-white transition-all shadow-sm"
+            >
+              <Zap className="w-3.5 h-3.5 text-bounty-deep" />
+              <span>Publish Bounty</span>
+            </button>
+          </div>
         </section>
 
         {/* Channel Telemetry Card */}
@@ -205,64 +189,18 @@ export default function Home() {
             executingTaskId={executingTaskId}
           />
         </section>
-
-        {/* Technical Architecture Matrix */}
-        <section className="bg-white rounded-2xl p-6 border border-bounty-sage/40 shadow-sm text-xs text-bounty-dark space-y-4">
-          <div className="flex items-center justify-between border-b border-bounty-ice pb-3">
-            <h3 className="font-extrabold text-sm text-bounty-dark flex items-center space-x-2">
-              <Shield className="w-4 h-4 text-bounty-cerulean" />
-              <span>Full-Stack Technical Architecture Overview</span>
-            </h3>
-            <span className="text-[11px] text-bounty-sage font-mono">Zero-Trust Architecture</span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl bg-bounty-ice/50 border border-bounty-sage/30 space-y-2">
-              <div className="font-bold text-bounty-deep flex items-center space-x-1.5">
-                <span className="w-2 h-2 rounded-full bg-bounty-deep"></span>
-                <span>Layer 1: CKB-VM Rust Contract</span>
-              </div>
-              <p className="text-bounty-deep/80 text-[11px] leading-relaxed">
-                Bare-metal <strong><code>bounty-lock</code></strong> compiled to <strong>RISC-V</strong> (17 KB binary). Enforces capacity conservation and autonomous timeout refund rules on-chain.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-bounty-ice/50 border border-bounty-sage/30 space-y-2">
-              <div className="font-bold text-bounty-cerulean flex items-center space-x-1.5">
-                <span className="w-2 h-2 rounded-full bg-bounty-cerulean"></span>
-                <span>Layer 2: Fiber Hold Invoices</span>
-              </div>
-              <p className="text-bounty-deep/80 text-[11px] leading-relaxed">
-                Off-chain conditional HTLC payment channels. Zero gas fees, sub-millisecond execution, and cryptographic preimage atomic release.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-bounty-ice/50 border border-bounty-sage/30 space-y-2">
-              <div className="font-bold text-emerald-700 flex items-center space-x-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>Worker: Autonomous Intelligence Node</span>
-              </div>
-              <p className="text-bounty-deep/80 text-[11px] leading-relaxed">
-                High-throughput autonomous agent reasoning and security verification engine. Generates cryptographically verifiable outputs and reveals matching preimages for instant off-chain finality.
-              </p>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-bounty-deep text-bounty-sage py-6 border-t border-bounty-cerulean/30 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <footer className="bg-bounty-deep text-bounty-sage py-5 border-t border-bounty-cerulean/30 text-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div>
-            <span className="font-bold text-bounty-ice">AgentBounty</span> — Built by{" "}
-            <span className="text-bounty-ice font-semibold">Riko Kurnia Sandi</span> for Nervos CKB Builder Track.
+            <span className="font-bold text-bounty-ice">AgentBounty</span> — Decentralized Autonomous Task Protocol
           </div>
           <div className="flex items-center space-x-4 text-[11px]">
             <span>CKB-VM (RISC-V)</span>
             <span>•</span>
-            <span>Fiber Network v0.9.0</span>
-            <span>•</span>
-            <span>Autonomous Intelligence Engine</span>
+            <span>Fiber Network L2</span>
             <span>•</span>
             <span>CCC Connector</span>
           </div>
