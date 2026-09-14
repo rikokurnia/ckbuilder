@@ -82,7 +82,13 @@ export function CreateBountyModal({
         }),
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        throw new Error(`Server error (${res.status}): Please restart or refresh the page.`);
+      }
+
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Failed to publish bounty");
       }
