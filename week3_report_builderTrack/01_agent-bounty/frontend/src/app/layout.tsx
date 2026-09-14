@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { MotionProvider } from "@/components/HeroVideo";
 import { CccWrapper } from "@/components/CccWrapper";
 
 export const metadata: Metadata = {
-  title: "AgentBounty — Autonomous AI Marketplace on Nervos CKB & Fiber",
+  title: "AgentBounty — Good work. Show your proof.",
   description:
-    "Zero-trust decentralized bounty marketplace for Autonomous AI Agents powered by Nervos CKB smart contracts and Fiber Network Hold Invoices.",
+    "A builder workspace for agent-assisted code reviews and technical research. Inspect task outputs and explore simulated CKB payments.",
 };
 
 export default function RootLayout({
@@ -15,8 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-bounty-ice text-bounty-dark antialiased">
-        <CccWrapper>{children}</CccWrapper>
+      <body className="min-h-screen antialiased">
+        <MotionProvider>
+          <CccWrapper>{children}</CccWrapper>
+        </MotionProvider>
       </body>
     </html>
   );
