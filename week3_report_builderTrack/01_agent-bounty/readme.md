@@ -1,143 +1,155 @@
-# 01 - AgentBounty: Zero-Trust Autonomous AI Labor Market
+# AgentBounty
 
-> **Project Name**: AgentBounty  
-> **Tagline**: *Zero-Trust Autonomous AI Agent Task Marketplace powered by Nervos CKB & Fiber Network Hold Invoices*  
-> **Track**: CKB Builder Track (Week 3 Capstone Module 01)  
-> **Reference Research**: [*AI, machine payments, and Fiber in 2026: an opportunity map for CKB and Fiber developers*](https://talk.nervos.org/t/ai-machine-payments-and-fiber-in-2026-an-opportunity-map-for-ckb-and-fiber-developers/10665)  
-> **Color Theme**: [ColorHunt #09637E, #088395, #7AB2B2, #EBF4F6](https://colorhunt.co/palette/09637e0883957ab2b2ebf4f6)
+AgentBounty is a deployed, testnet-scoped AI task marketplace prototype for the CKB Builder Track. It demonstrates a complete creator-to-agent workflow with wallet authentication, live Gemini execution, human acceptance, durable Supabase state, cryptographic payment commitments, and signed receipts.
 
----
+The active deployment uses `PAYMENT_ADAPTER=mock`. It does not claim native Fiber settlement or a CKB on-chain transfer.
 
-## Executive Summary
+## Current status
 
-**AgentBounty** is a decentralized, zero-trust task marketplace designed for the emerging autonomous machine-to-machine (M2M) economy. Grounded in Nervos ecosystem research on machine payments:
-- **The Fair-Exchange Dilemma**: Unattended AI agents cannot trust buyers to pay after delivering compute, while buyers cannot risk paying upfront for unverified or hallucinated AI work.
-- **The Fiber Solution**: AgentBounty leverages **Fiber Network Hold Invoices** (HTLC conditional payment) off-chain for zero-gas, sub-millisecond settlement, anchored to an on-chain bare-metal **Rust CKB-VM (`ckb-std`)** lock script for timeout refunds and capacity conservation.
-- **Autonomous Intelligence**: The worker agent (`Sentinel-Flash AI`) connects directly to **Google Gemini Flash** via API Key, generating verified security audits and research reports while keeping its secret cryptographic preimage sealed until delivery.
+| Component | Status |
+|---|---|
+| Next.js application and API | Deployed on Vercel |
+| Persistence | Supabase, revision-controlled single-state record |
+| Network policy | CKB testnet only |
+| Wallet integration | CCC wallet connection and signed-challenge authentication |
+| AI worker | Live Gemini 3.5 Flash |
+| Payment adapter | Mock demonstration mode |
+| Acceptance receipt | Ed25519 signed and server-verifiable |
+| Native FNN adapter | Implemented behind a disabled feature boundary; spike deferred |
+| Custom CKB lock | Prototype only; not deployed or funded |
 
----
+The deployed health check has returned:
 
-## Architecture & Component Breakdown
+```json
+{
+  "status": "ok",
+  "network": "ckb_testnet",
+  "paymentAdapter": "mock",
+  "persistence": "supabase",
+  "modelConfigured": true
+}
+```
+
+## Verified hosted user flow
+
+The following flow has completed successfully against the deployed application:
+
+1. The creator connects a wallet and signs a domain-bound authentication challenge.
+2. Publishing stores a task, reserves its demo balance, creates a 32-byte preimage, and commits its SHA-256 hash.
+3. A worker wallet starts execution. The mock invoice moves from `OPEN` to `HELD` while Gemini generates the artifact.
+4. The artifact passes deterministic checks and stops at `NEEDS_REVIEW`. Execution never settles payment automatically.
+5. Only the original creator may accept or reject the result.
+6. Acceptance verifies the stored preimage against the immutable commitment, moves the mock receiver and payer to terminal states, and records the artifact digest.
+7. The server issues an Ed25519-signed receipt and persists the new revision in Supabase.
+8. The UI can independently check the preimage hash and ask the server to verify the receipt signature.
+
+The verified run used two distinct wallet identities, live Gemini output, three passing validation checks, receiver state `Paid`, payer state `Success`, and a persisted Supabase revision.
+
+## What the evidence proves
+
+The signed receipt binds these application facts:
+
+- creator and worker wallet identities;
+- CKB testnet label;
+- task and invoice identifiers;
+- reward amount in Shannons;
+- SHA-256 payment hash;
+- artifact digest;
+- validation results and model metadata;
+- creator acceptance time;
+- states reported by the selected payment adapter.
+
+The receipt proves integrity of the recorded application decision. It does not prove that Gemini's output is factually correct, and with the mock adapter it does not prove that funds moved over Fiber or CKB.
+
+## Why there is no transaction on CKB Explorer
+
+The deployed configuration is intentionally:
+
+```text
+CKB_NETWORK=testnet
+PAYMENT_ADAPTER=mock
+```
+
+`CKB_NETWORK=testnet` prevents accidental use on another network. Wallets sign login challenges, which require no transaction or gas. `PAYMENT_ADAPTER=mock` returns deterministic invoice observations for product testing, so its `Paid` and `Success` states are not native network evidence.
+
+Fiber payments are off-chain after a channel is funded. Channel funding and closing may produce CKB transactions, while each Fiber payment does not normally appear as a standalone CKB L1 transaction. The funded research nodes are separate from the active Vercel application.
+
+## Architecture
 
 ```mermaid
-graph TD
-    subgraph Layer 1: Nervos CKB
-        L1Contract["bounty-lock.rs (CKB-VM RISC-V)<br/>17 KB ELF Binary • Timeout Refund Anchor"]
-    end
-
-    subgraph Layer 2: Fiber Network
-        FiberEngine["Fiber Hold Invoice Engine (FNN)<br/>HTLC State Machine • 0.00 Gas • &lt;1ms Finality"]
-    end
-
-    subgraph Autonomous Agent Worker
-        AIWorker["Sentinel-Flash AI Agent<br/>Google Gemini Flash API"]
-    end
-
-    subgraph Web3 Frontend
-        dApp["Next.js 15 + CCC Connector<br/>Tailwind CSS ColorHunt Theme"]
-    end
-
-    dApp -->|1. Publish Task & Lock Capacity| FiberEngine
-    FiberEngine -.->|Dispute / Timeout Anchor| L1Contract
-    AIWorker -->|2. Accept & Lock HTLC (Status: HELD)| FiberEngine
-    AIWorker -->|3. Generate Report| AIWorker
-    AIWorker -->|4. Settle with Secret Preimage| FiberEngine
-    FiberEngine -->|5. Instant Atomic Settlement| dApp
+flowchart TD
+    Creator[Creator wallet] -->|CCC signed challenge| Web[Next.js 15 UI + API]
+    Worker[Worker wallet] -->|CCC signed challenge| Web
+    Web --> Backend[AgentBounty backend authority]
+    Backend --> Gemini[Gemini 3.5 Flash]
+    Backend --> Store[(Supabase)]
+    Backend --> Payment[Mock payment adapter]
+    Backend --> Crypto[AES-GCM secret storage<br/>SHA-256 commitment<br/>Ed25519 receipt]
+    Native[FNN v0.9.1 testnet nodes] -. disabled until spike passes .-> Backend
+    Lock[CKB bounty-lock prototype] -. deferred by ADR-001 .-> Backend
 ```
 
----
+## Repository layout
 
-## Sub-Module Directory Structure
-
-```
-week3_report_builderTrack/01_agent-bounty/
-├── contracts/
-│   └── bounty-lock/               <-- Bare-Metal Rust Smart Contract targeting CKB-VM RISC-V
-│       ├── Cargo.toml
-│       ├── build.sh               <-- Compiles to riscv64imac-unknown-none-elf (17 KB binary)
-│       ├── src/main.rs            <-- On-chain verification, preimage hash matching, capacity conservation
-│       ├── src/sha256.rs          <-- Standalone #![no_std] FIPS 180-4 SHA-256 implementation
-│       ├── src/error.rs           <-- CKB-VM structured error codes
-│       └── readme.md
-├── services/                      <-- Layer 2 Fiber Engine & Gemini Flash AI Worker
-│       ├── package.json
-│       ├── tsconfig.json
-│       ├── src/fiber_engine.ts    <-- Hold Invoice state machine (OPEN -> HELD -> SETTLED)
-│       ├── src/gemini_client.ts   <-- Official Gemini Flash client with autonomous fallback
-│       ├── src/ai_worker.ts       <-- Sentinel-Flash autonomous agent worker
-│       ├── src/simulate_bounty.ts <-- End-to-end multi-scenario test suite
-│       └── readme.md
-├── frontend/                      <-- Next.js 15 + CCC Web3 dApp
-│       ├── package.json
-│       ├── tailwind.config.js     <-- Theme (#09637E, #088395, #7AB2B2, #EBF4F6)
-│       ├── src/app/page.tsx       <-- Main Marketplace Dashboard
-│       ├── src/components/        <-- Navbar, ChannelStatsCard, BountyFeed, Modals
-│       └── readme.md
-├── .env.example                   <-- Template for GEMINI_API_KEY & CKB_RPC_URL
-└── readme.md                      <-- This master documentation
+```text
+01_agent-bounty/
+├── frontend/                 Next.js 15 landing page, workspace, and API routes
+├── services/                 Backend lifecycle, Gemini, payment adapters, and tests
+├── contracts/bounty-lock/    Deferred CKB lock prototype and SHA-256 tests
+├── supabase/migrations/      Durable state schema
+├── docs/
+│   ├── adr-001-payment-acceptance.md
+│   ├── deployment-guide.md
+│   ├── fnn-spike-runbook.md
+│   └── manual-integration-checklist.md
+└── readme.md
 ```
 
----
+## Local verification
 
-## How to Run & Verify Each Layer
+Use Node.js 22.x.
 
-### 1. Bare-Metal Rust Contract Verification (Layer 1)
 ```bash
-cd week3_report_builderTrack/01_agent-bounty/contracts/bounty-lock
-
-# Run NIST SHA-256 unit tests
-cargo test
-
-# Compile to static stripped RISC-V ELF binary
-./build.sh
-```
-*Output: `target/riscv64imac-unknown-none-elf/release/bounty-lock` (17 KB).*
-
----
-
-### 2. Fiber Hold Invoice Engine & AI Simulation (Layer 2)
-```bash
-cd week3_report_builderTrack/01_agent-bounty/services
-
-# Install dependencies
+cd week3_report_builderTrack/01_agent-bounty
 npm install
 
-# Run multi-scenario E2E simulation
+# Backend lifecycle/security tests and Rust SHA-256 tests
 npm test
+
+# Next.js production build and Vercel trace-layout verification
+npm --prefix frontend run build
 ```
-*Verified Scenarios: Happy Path Settlement, Malicious Preimage Rejection, Timeout Refund.*
 
----
+For local UI development:
 
-### 3. Interactive Web dApp with CCC Wallet (Frontend)
 ```bash
-cd week3_report_builderTrack/01_agent-bounty/frontend
-
-# Install dependencies
-npm install
-
-# Launch development server (Port 3005)
-npm run dev
-
-# Or build production bundle
-npm run build
+npm --prefix frontend run dev
 ```
-Open [http://localhost:3005](http://localhost:3005) in your browser. Connect via JoyID, UniSat, OKX, or MetaMask.
 
----
+Open `http://localhost:3005`.
 
-## Phase 0 implementation-status note (14 September 2026)
+## Deployment
 
-Original sections above are preserved as the project record. Verified status and corrections:
+The supported hosted layout is:
 
-- **Verified reproducible commands:** `contracts/bounty-lock`: `cargo test` → 4 host-side SHA-256 tests passed; `services`: `npm test` → lifecycle regression suite passed; `frontend`: `npm run build` passes on Next.js 15.5.24 and `npm run start` serves the production preview (dev port 3005).
-- **Legacy simulation, not mainnet/testnet settlement:** the earlier standalone Fiber demo uses in-memory maps and synthetic channel IDs. It remains available only through `npm run check:legacy-simulation` and is not imported by the application. Native FNN stays disabled until the funded spike passes.
-- **Contract scope:** `cargo test` exercises only the standalone SHA-256 module on host. No CKB-VM transaction test exists. Path A (0x01) checks the preimage hash but does not constrain payout recipient or amount; Path B (0x02) performs no creator-authority or timeout check. Do not fund this lock with valuable capacity. L1 escrow is **deferred** for Phases 0–1 by operator decision.
-- **Decisions locked for Phase 0–1:** operator-mediated settlement, hosted Supabase (Postgres + realtime), FNN v0.9.1 as the testnet spike candidate, Gemini key confirmed live.
-- Next gates: payment/acceptance ADR, native two-node FNN spike (requires operator-run funded testnet nodes; backend keeps a labeled mock adapter until then).
+- Vercel Root Directory: `week3_report_builderTrack/01_agent-bounty/frontend`
+- Include source files outside Root Directory: enabled
+- Runtime: Node.js 22.x
+- Database: Supabase migration in `supabase/migrations/`
+- Active payment mode: `mock`
 
-### Current integrated path (15 September 2026)
+Environment variables and verification steps are documented in [`docs/deployment-guide.md`](./docs/deployment-guide.md).
 
-The Next.js API now consumes `services/src/backend.ts` as its single backend authority. Publish, execute, validation, human review, settlement, idempotency, wallet authentication, and restart persistence are wired end to end. Mock mode is the verified local path; native FNN activation and public-deployment secrets are listed in `docs/manual-integration-checklist.md`.
+Never expose Gemini, Supabase service-role, encryption, authentication, receipt-signing, FNN RPC, or preimage secrets through `NEXT_PUBLIC_*` variables.
 
-Hosted deployments use revision-checked Supabase persistence, authenticated SSE snapshot delivery, a testnet-only runtime guard, and Ed25519-signed acceptance receipts. Vercel workspace configuration and the release procedure are documented in `docs/deployment-guide.md`.
+## Deferred native Fiber work
+
+Two CKB testnet-funded FNN nodes exist for protocol research, but they are not connected to the deployed application. Before setting `PAYMENT_ADAPTER=fnn`, complete all cases in [`docs/fnn-spike-runbook.md`](./docs/fnn-spike-runbook.md) and confirm the exact FNN v0.9.1 RPC shapes and terminal states used by `services/src/backend.ts`.
+
+A hosted FNN deployment would also require secured, server-reachable payer and receiver RPC endpoints. Vercel cannot call nodes exposed only at `127.0.0.1` on an operator's computer.
+
+## Deferred CKB contract work
+
+Do not deploy or fund `contracts/bounty-lock` in its current form. The prototype does not yet enforce safe payout destinations, creator-authorized refunds, or a valid timeout path. Its four passing tests cover SHA-256 behavior on the host rather than complete CKB transactions.
+
+Reactivation requires a redesigned lock, transaction-level CKB-VM tests, and an amendment to [`docs/adr-001-payment-acceptance.md`](./docs/adr-001-payment-acceptance.md).

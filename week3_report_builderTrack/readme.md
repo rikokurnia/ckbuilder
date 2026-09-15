@@ -1,56 +1,90 @@
-# Week 3 Builder Track Master Report
+# Week 3 Builder Track Report
 
-**Name Builder**: Riko Kurnia Sandi  
-**Track**: CKB Builder Track  
-**Focus**: Advanced Autonomous Agent Applications, Payment Channels, and Machine Economies on Nervos CKB
+**Builder:** Riko Kurnia Sandi
 
----
+**Track:** CKB Builder Track
 
-## Executive Summary
+**Focus:** AI agent workflows, verifiable application receipts, and testnet payment research on Nervos CKB
 
-Week 3 shifts focus into **production-grade dApp engineering for the emerging Machine & AI Economy**. Grounded in recent research on machine payments and Layer 2 channels, Week 3 explores:
-1. **Machine-to-Machine (M2M) Payment Protocols**: How autonomous software entities execute micro-transactions without human manual signing or conventional banking rails.
-2. **Zero-Trust Fair Exchange with Fiber Network**: Utilizing **Fiber Network Hold Invoices** to eliminate counterparty risk between autonomous agents and task creators.
-3. **Multi-Layer Architecture**: Harmonizing bare-metal **Rust smart contracts on CKB-VM (RISC-V)** with Layer 2 off-chain state machines and modern **Next.js 14 Web3 user interfaces powered by CCC**.
+## Project
 
----
+### 01 — AgentBounty
 
-## 01 - AgentBounty: Autonomous AI Labor Market
+AgentBounty is a deployed AI task marketplace prototype. A creator publishes a bounty with a CKB-denominated demo reward, a wallet-authenticated worker runs a live Gemini agent, deterministic checks gate the result, and the creator accepts or rejects it. Acceptance reveals the committed preimage and produces an Ed25519-signed receipt.
 
-> **Sub-Report & Codebase**: [View 01_agent-bounty Documentation](./01_agent-bounty/readme.md)
+[Open the AgentBounty report and source](./01_agent-bounty/readme.md)
 
-**Objective**: Build an autonomous AI task marketplace solving the *fair-exchange dilemma* in machine payments using Fiber Network Hold Invoices and CKB smart contracts, inspired by the Nervos 2026 Opportunity Map research.
+## Verified deployed state
 
-- **On-Chain Bare-Metal Contract (`bounty-lock`)**:
-  - Code: [`contracts/bounty-lock/src/main.rs`](./01_agent-bounty/contracts/bounty-lock/src/main.rs)
-  - Built with `#![no_std]` and `ckb-std v1.1.0`. Compiled directly to bare-metal RISC-V (`riscv64imac-unknown-none-elf`).
-  - Implements cryptographic SHA-256 preimage verification, capacity conservation invariants, and autonomous timeout refund rules.
-  - Produces a static **17 KB** stripped ELF executable.
-- **Layer 2 Fiber Engine & Gemini Flash AI Worker**:
-  - Code: [`services/src/`](./01_agent-bounty/services/src/)
-  - Real-time Hold Invoice state machine (`OPEN` $\rightarrow$ `HELD` $\rightarrow$ `SETTLED`).
-  - Autonomous AI worker connected directly to **Google Gemini Flash** using API Key, producing real code security audits and research reports.
-  - Instant atomic settlement with 0.00 Gas and sub-millisecond finality.
-- **Next.js 14 Frontend dApp (CCC + ColorHunt Theme)**:
-  - Code: [`frontend/`](./01_agent-bounty/frontend/)
-  - Styled with custom ColorHunt palette (`#09637E`, `#088395`, `#7AB2B2`, `#EBF4F6`).
-  - Connected to CKB Testnet using `@ckb-ccc/connector-react` (JoyID, UniSat, OKX, MetaMask).
-  - Features live channel telemetry, interactive hold invoice inspector, and one-click autonomous agent deployment.
+The hosted Next.js 15 application and API run together on Vercel, with durable state stored in Supabase. The deployed health endpoint has been verified with:
 
----
+```json
+{
+  "status": "ok",
+  "network": "ckb_testnet",
+  "paymentAdapter": "mock",
+  "persistence": "supabase",
+  "modelConfigured": true
+}
+```
 
-## Project Structure & Navigation
+An end-to-end hosted lifecycle has also completed successfully:
 
-- **`week3_report_builderTrack/`** — Master Directory
-  - [01_agent-bounty](./01_agent-bounty/) — Full-stack autonomous AI task marketplace (Rust Contract + Fiber Engine + Gemini Flash + Next.js 14 dApp)
+1. A creator authenticated by signing a wallet challenge.
+2. The creator published a bounty and immutable SHA-256 payment commitment.
+3. A second wallet authenticated as the worker.
+4. Gemini 3.5 Flash returned a live artifact.
+5. All three deterministic validation checks passed.
+6. The creator accepted the result.
+7. The mock invoice reached receiver `Paid` and payer `Success` states.
+8. The app issued a signed acceptance receipt and persisted the updated state in Supabase.
 
----
+## Evidence boundaries
 
-## Phase 0 implementation-status note (14 September 2026)
+| Capability | Current evidence |
+|---|---|
+| Wallet identity | Real CKB-compatible wallet message signing |
+| AI execution | Live Gemini 3.5 Flash response with model metadata |
+| Application state | Durable Supabase row with revision-controlled updates |
+| Payment commitment | Server-generated 32-byte preimage with immutable SHA-256 hash |
+| Acceptance record | Ed25519-signed receipt with artifact digest and validation results |
+| Payment lifecycle | Honest `PAYMENT_ADAPTER=mock` simulation |
+| Native Fiber payment | Deferred; the deployed app does not call FNN nodes |
+| CKB on-chain transaction | None is created by the deployed app |
+| Custom `bounty-lock` | Research prototype only; not deployed or funded |
 
-The descriptions above are preserved as the original project record. The following corrections apply to all AgentBounty claims until the corresponding exit gates pass:
+`network: ckb_testnet` is a runtime safety guard and receipt label. It does not mean the mock payment produced an on-chain transaction. Wallet signatures authenticate users without spending CKB.
 
-- The "Fiber Hold Invoice engine" is an **in-memory TypeScript simulation** (no FNN RPC calls, synthetic channel IDs). "Real-time," "0.00 gas," and "sub-millisecond finality" labels describe local map mutations timed with `Date.now()`, not measured network behavior.
-- The `bounty-lock` tests are **two host-side SHA-256 unit tests** (`cargo test`: 2 passed). No transaction executes in CKB-VM, and the lock does not constrain payout destination/recipient or verify creator authority on refund (see `01_agent-bounty/contracts/bounty-lock/readme.md`).
-- The frontend is a **simulation-labeled demonstrator**: wallet connection is real (CKB testnet), but balances, invoices, and task data are in-memory demo state.
-- Tracked in `../random_things/agentbounty-improvement-plan.md` (outside this repo). Phase 0 exit requires a payment/acceptance ADR and a native two-node FNN spike before any claim of real settlement.
+## Current architecture
+
+```mermaid
+flowchart LR
+    Creator[Creator wallet] -->|signed challenge| App[Next.js 15 on Vercel]
+    Worker[Worker wallet] -->|signed challenge| App
+    App --> Gemini[Gemini 3.5 Flash]
+    App --> DB[(Supabase)]
+    App --> Mock[Mock payment adapter]
+    App --> Receipt[SHA-256 commitment + Ed25519 receipt]
+    FNN[Funded FNN testnet nodes] -. deferred adapter validation .-> App
+    Contract[CKB bounty-lock prototype] -. not deployed .-> App
+```
+
+## Verification commands
+
+```bash
+cd week3_report_builderTrack/01_agent-bounty
+
+# Backend lifecycle, authorization, persistence, and receipt tests
+npm test
+
+# Production frontend build, including the Vercel trace-layout guard
+npm --prefix frontend run build
+```
+
+The Rust test suite currently verifies four standalone SHA-256 vectors on the host. It is not a CKB-VM transaction test suite.
+
+## Remaining protocol work
+
+Native Fiber activation remains a separate research gate. The two funded FNN nodes must complete the cases in [`docs/fnn-spike-runbook.md`](./01_agent-bounty/docs/fnn-spike-runbook.md), including terminal state observation, restart recovery, cancellation behavior, and the protocol expiry case. The deployed application must remain on `PAYMENT_ADAPTER=mock` until those observations match the adapter.
+
+The custom CKB lock must not hold funds until payout destination constraints, creator refund authorization, an enforced `since` timeout, and transaction-level CKB-VM tests are added. See [`docs/adr-001-payment-acceptance.md`](./01_agent-bounty/docs/adr-001-payment-acceptance.md).
