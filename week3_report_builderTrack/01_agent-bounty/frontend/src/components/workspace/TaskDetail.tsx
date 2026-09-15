@@ -47,14 +47,16 @@ function Artifact({ text }: { text: string }) {
   );
 }
 export function TaskDetail({ id }: { id: string }) {
-  const { bounties, invoices, loading, error, execute, executing } =
+  const { bounties, invoices, receipts, loading, error, execute, review, cancel, executing } =
     useWorkspace();
   const params = useSearchParams();
   const selected = params.get("tab") || "brief";
   const [copied, setCopied] = useState(false);
   const [check, setCheck] = useState("");
+  const [reviewNote, setReviewNote] = useState("");
   const t = bounties.find((t) => t.id === id);
   const invoice = invoices.find((i) => i.taskId === id);
+  const receipt = receipts.find((item) => item.taskId === id);
   if (loading) return <div className="skeleton" aria-label="Loading task" />;
   if (!t)
     return (
@@ -63,7 +65,7 @@ export function TaskDetail({ id }: { id: string }) {
         <p>
           {error
             ? "Retry loading the workspace above."
-            : "The demo server may have restarted, or this task ID does not exist."}
+            : "This task ID does not exist in the active workspace."}
         </p>
         <Link href="/marketplace" className="button primary">
           Return to marketplace
@@ -103,6 +105,11 @@ export function TaskDetail({ id }: { id: string }) {
     } catch (e) {
       setCheck(e instanceof Error ? e.message : "Could not verify hash");
     }
+  };
+  const verifySignedReceipt = async () => {
+    const response = await fetch(`/api/receipts/${encodeURIComponent(t.id)}`, { cache: "no-store" });
+    const body = await response.json();
+    setCheck(response.ok && body.verified ? "Receipt signature is valid and matches the stored acceptance record." : body.error || "Receipt signature verification failed.");
   };
   return (
     <>
@@ -154,8 +161,8 @@ export function TaskDetail({ id }: { id: string }) {
                 <h3>Instructions to the agent</h3>
                 <p className="brief-text">{t.prompt}</p>
                 <div className="notice-banner">
-                  Requested checks are part of the brief. The demo backend does
-                  not enforce acceptance criteria.
+                  Requested checks are part of the brief. The backend records
+                  deterministic checks before the creator can accept a result.
                 </div>
               </>
             )}
@@ -175,7 +182,7 @@ export function TaskDetail({ id }: { id: string }) {
                       new Date(t.createdAt).toLocaleString(),
                     ],
                     [
-                      t.status === "IN_PROGRESS" || t.status === "COMPLETED",
+                      t.status !== "OPEN" && t.status !== "CANCELLED",
                       "Agent execution",
                       t.status === "OPEN"
                         ? "Not started"
@@ -184,16 +191,16 @@ export function TaskDetail({ id }: { id: string }) {
                           : "Detailed logs unavailable",
                     ],
                     [
-                      t.status === "COMPLETED",
+                      Boolean(t.resultArtifact),
                       "Result returned",
                       t.resultArtifact
                         ? "Artifact available for independent review"
                         : "Awaiting output",
                     ],
                     [
-                      false,
+                      t.status === "COMPLETED",
                       "Independent acceptance",
-                      "No acceptance decision supplied by the backend",
+                      t.status === "COMPLETED" ? "Creator accepted the artifact" : t.status === "NEEDS_REVISION" ? "Creator or automated checks requested revision" : "Awaiting creator decision",
                     ],
                   ].map(([done, title, desc]) => (
                     <li key={String(title)}>
@@ -235,7 +242,7 @@ export function TaskDetail({ id }: { id: string }) {
                     <div className="notice-banner">
                       {t.id === "task_seed_01"
                         ? "Illustrative sample report."
-                        : "Generated text; model provenance is not provided and demo fallback may have been used."}{" "}
+                        : `${t.modelMetadata?.live ? "Live model output" : "Demo fallback output"}${t.modelMetadata?.model ? ` from ${t.modelMetadata.model}` : ""}.`}{" "}
                       Findings have not been independently validated.
                     </div>
                     <Artifact text={t.resultArtifact} />
@@ -259,7 +266,7 @@ export function TaskDetail({ id }: { id: string }) {
                   </div>
                   <div>
                     <dt>Model metadata</dt>
-                    <dd>Not supplied</dd>
+                    <dd>{t.modelMetadata ? `${t.modelMetadata.model} · ${t.modelMetadata.tokens} tokens · ${t.modelMetadata.durationMs}ms` : "Not supplied"}</dd>
                   </div>
                 </dl>
               </>
@@ -281,30 +288,28 @@ export function TaskDetail({ id }: { id: string }) {
                   </div>
                   <div>
                     <dt>Committed artifact digest</dt>
-                    <dd>Not supplied</dd>
+                    <dd>{receipt ? <code>{receipt.artifactDigest}</code> : "Not supplied"}</dd>
                   </div>
                   <div>
                     <dt>Source provenance</dt>
                     <dd>Not supplied</dd>
                   </div>
-                  <div>
-                    <dt>Deterministic checks</dt>
-                    <dd>Not run</dd>
-                  </div>
+                  {(t.validation?.checks || []).map((item) => <div key={item.name}><dt>{item.name}</dt><dd>{item.passed ? "Passed" : "Failed"} · {item.detail}</dd></div>)}
+                  {!t.validation && <div><dt>Deterministic checks</dt><dd>Not run</dd></div>}
                   <div>
                     <dt>Human acceptance</dt>
-                    <dd>Not recorded</dd>
+                    <dd>{t.status === "COMPLETED" ? "Accepted" : t.status === "NEEDS_REVISION" ? "Revision requested" : "Not recorded"}</dd>
                   </div>
                   <div>
                     <dt>Issuer signature</dt>
-                    <dd>Not supplied</dd>
+                    <dd>{receipt ? `Ed25519 · key ${receipt.issuerKeyId}` : "Not supplied"}</dd>
                   </div>
                 </dl>
               </>
             )}
             {selected === "payment" && (
               <>
-                <span className="eyebrow">SIMULATED INVOICE</span>
+                <span className="eyebrow">{invoice?.adapter === "fnn" ? "FNN INVOICE" : "SIMULATED INVOICE"}</span>
                 <h2>Payment & receipt</h2>
                 {invoice ? (
                   <>
@@ -320,18 +325,18 @@ export function TaskDetail({ id }: { id: string }) {
                         <dd>{number(invoice.amountCkb)} CKB</dd>
                       </div>
                       <div>
-                        <dt>Demo status</dt>
+                        <dt>Application status</dt>
                         <dd>
                           <Status value={invoice.status} />
                         </dd>
                       </div>
                       <div>
                         <dt>Network observation</dt>
-                        <dd>Not available</dd>
+                        <dd>{invoice.nativeInvoiceState ? `Receiver: ${invoice.nativeInvoiceState}${invoice.nativePaymentState ? ` · Payer: ${invoice.nativePaymentState}` : ""}` : "Not observed"}</dd>
                       </div>
                       <div>
                         <dt>Signed receipt</dt>
-                        <dd>Not available</dd>
+                        <dd>{receipt ? `Available · issuer ${receipt.issuerKeyId}` : "Available after accepted settlement"}</dd>
                       </div>
                     </dl>
                     <h3>Payment hash</h3>
@@ -354,34 +359,7 @@ export function TaskDetail({ id }: { id: string }) {
                       >
                         Check preimage hash
                       </button>
-                      <button
-                        className="button"
-                        onClick={() =>
-                          download(
-                            t.id + "-demo-record.json",
-                            JSON.stringify(
-                              {
-                                mode: "simulation",
-                                signed: false,
-                                taskId: t.id,
-                                invoiceId: invoice.id,
-                                paymentHash: invoice.paymentHash,
-                                amountCkb: invoice.amountCkb,
-                                status: invoice.status,
-                                createdAt: invoice.createdAt,
-                                settledAt: invoice.settledAt,
-                                limitations:
-                                  "Unsigned demo record. No native payment observation or artifact validation.",
-                              },
-                              null,
-                              2,
-                            ),
-                            "application/json",
-                          )
-                        }
-                      >
-                        <Download size={16} /> Demo record
-                      </button>
+                      {receipt && <><button className="button" onClick={() => void verifySignedReceipt()}>Verify receipt signature</button><button className="button" onClick={() => download(t.id + "-signed-receipt.json", JSON.stringify(receipt, null, 2), "application/json")}><Download size={16} /> Signed receipt</button></>}
                     </div>
                     {!invoice.preimage && (
                       <p className="muted">
@@ -419,7 +397,7 @@ export function TaskDetail({ id }: { id: string }) {
             <strong>
               {number(t.rewardCkb)} <small>CKB</small>
             </strong>
-            <p>Simulated funds only</p>
+            <p>{invoice?.adapter === "fnn" ? "Observed through FNN adapter" : "Mock payment adapter"}</p>
             {t.status === "OPEN" ? (
               <button
                 className="button primary"
@@ -427,22 +405,31 @@ export function TaskDetail({ id }: { id: string }) {
                 onClick={() => void execute(t.id)}
               >
                 <Play size={16} />
-                {executing === t.id ? "Running demo…" : "Start demo run"}
+                {executing === t.id ? "Running…" : "Start run"}
               </button>
+            ) : t.status === "NEEDS_REVIEW" ? (
+              <div className="review-actions">
+                <label htmlFor="review-note">Review note<textarea id="review-note" rows={3} value={reviewNote} onChange={(event) => setReviewNote(event.target.value)} placeholder="What did you check?" /></label>
+                <button className="button primary" disabled={!!executing} onClick={() => void review(t.id, "accept", reviewNote)}>Accept & settle</button>
+                <button className="button" disabled={!!executing || !reviewNote.trim()} onClick={() => void review(t.id, "reject", reviewNote)}>Request revision</button>
+              </div>
+            ) : t.status === "NEEDS_REVISION" ? (
+              <button className="button primary" disabled={!!executing} onClick={() => void execute(t.id)}><Play size={16} />Run revision</button>
             ) : t.status === "COMPLETED" ? (
               <Link href="?tab=result" className="button primary">
                 Inspect result <ArrowUpRight size={16} />
               </Link>
             ) : (
               <button className="button" disabled>
-                {t.status === "CANCELLED" ? "Task cancelled" : "Agent running"}
+                {t.status === "CANCELLED" ? "Task cancelled" : t.status === "FAILED" ? "Run failed" : "Agent running"}
               </button>
             )}
             <small>
               {t.status === "CANCELLED"
                 ? "Cancelled tasks cannot be dispatched."
-                : "Demo execution can use a template fallback. Payment is simulated automatically."}
+                : t.status === "NEEDS_REVIEW" ? "Acceptance releases the committed preimage only after validation and review." : "Execution never settles payment automatically."}
             </small>
+            {t.status === "OPEN" && <button className="text-link cancel-task" disabled={!!executing} onClick={() => void cancel(t.id)}>Cancel open task</button>}
           </div>
           <div className="task-people">
             <h3>Task details</h3>

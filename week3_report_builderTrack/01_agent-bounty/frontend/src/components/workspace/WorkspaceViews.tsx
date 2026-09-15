@@ -27,6 +27,9 @@ export const categories: Record<string, string> = {
 export const statuses: Record<string, string> = {
   OPEN: "Open",
   IN_PROGRESS: "Running",
+  NEEDS_REVIEW: "Needs review",
+  NEEDS_REVISION: "Needs revision",
+  FAILED: "Failed",
   COMPLETED: "Completed",
   CANCELLED: "Cancelled",
   HELD: "Payment held",
@@ -113,7 +116,7 @@ export function TaskTable({ tasks }: { tasks: BountyTask[] }) {
 export function Overview() {
   const { bounties, invoices, channel, loading } = useWorkspace();
   const active = bounties.filter(
-    (t) => t.status === "OPEN" || t.status === "IN_PROGRESS",
+    (t) => ["OPEN", "IN_PROGRESS", "NEEDS_REVIEW", "NEEDS_REVISION"].includes(t.status),
   );
   return (
     <>
@@ -371,6 +374,7 @@ export function Marketplace({ mine = false }: { mine?: boolean }) {
               ["ALL", "All tasks"],
               ["OPEN", "Open"],
               ["IN_PROGRESS", "Running"],
+              ["NEEDS_REVIEW", "Needs review"],
               ["COMPLETED", "Completed"],
               ["CANCELLED", "Cancelled"],
             ].map(([v, l]) => (
@@ -535,7 +539,7 @@ export function Payments() {
   );
 }
 export function Evidence() {
-  const { bounties, loading } = useWorkspace();
+  const { bounties, receipts, loading } = useWorkspace();
   const tasks = bounties.filter((t) => t.resultArtifact);
   return (
     <>
@@ -550,9 +554,9 @@ export function Evidence() {
         <div>
           <h3>Integrity, provenance, and acceptance are different checks.</h3>
           <p>
-            This demo provides result text and a payment hash. Source snapshots,
-            validator logs, and signed receipts are not supplied by the current
-            backend.
+            This demo provides result text, deterministic validation, a payment
+            commitment, and a signed receipt after acceptance. Source snapshots
+            remain a separate provenance layer.
           </p>
         </div>
       </div>
@@ -584,7 +588,7 @@ export function Evidence() {
                   · Independent review required
                 </p>
               </div>
-              <span className="small-tag">Sources not attached</span>
+              <span className="small-tag">{receipts.some((receipt) => receipt.taskId === t.id) ? "Signed receipt" : "Awaiting acceptance"}</span>
               <ArrowUpRight size={19} />
             </Link>
           ))

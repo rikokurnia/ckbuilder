@@ -1,68 +1,26 @@
+import { BackendError, getBackend } from 'agent-bounty-services';
 import { NextResponse } from 'next/server';
-import { fiberStore } from '@/lib/fiberStore';
-import { callGeminiFlash } from '@/lib/gemini';
+import { actorFromRequest } from '@/lib/auth';
 
-export async function POST(req: Request) {
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
+export async function POST(request: Request) {
+  const requestId = crypto.randomUUID();
   try {
-    const body = await req.json();
-    const { taskId, apiKey, workerName = 'Autonomous Sentinel Node' } = body;
-
-    const task = fiberStore.getBounty(taskId);
-    if (!task) {
-      return NextResponse.json({ success: false, error: 'Task not found' }, { status: 404 });
-    }
-
-    if (task.status === 'COMPLETED') {
-      return NextResponse.json({ success: false, error: 'Task is already completed' }, { status: 400 });
-    }
-
-    // 1. Lock Hold Invoice in channel
-    fiberStore.lockInvoice(task.invoiceId, `ckb1_worker_${workerName.toLowerCase().replace(/\s+/g, '_')}`);
-
-    // 2. Execute AI processing via Gemini Flash
-    const aiResult = await callGeminiFlash(task.prompt, task.category, apiKey);
-
-    // 3. For the demo / prototype flow:
-    // In production, the invoice was registered with paymentHash.
-    // We settle using the matching preimage!
-    // If the task was created with a custom hash, we use the preimage corresponding to that task.
-    // If the invoice has task.paymentHash, we verify against it.
-    let preimageToUse = aiResult.preimage;
-    // If the task was registered with a specific hash that doesn't match this ephemeral run,
-    // let's update or ensure the preimage generates the required paymentHash:
-    const invoice = fiberStore.getInvoices().find(inv => inv.id === task.invoiceId);
-    if (invoice && invoice.paymentHash !== aiResult.paymentHash) {
-      // In a real channel, the worker would have had the preimage beforehand or derived it.
-      // We settle with the task's valid preimage or aiResult preimage
-      invoice.paymentHash = aiResult.paymentHash;
-      task.paymentHash = aiResult.paymentHash;
-    }
-
-    const { durationMs } = fiberStore.settleInvoice(
-      task.invoiceId,
-      preimageToUse,
-      aiResult.analysis,
-      workerName
-    );
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        task: fiberStore.getBounty(taskId),
-        invoice: fiberStore.getInvoices().find(i => i.id === task.invoiceId),
-        channel: fiberStore.getChannel(),
-        aiExecution: {
-          modelUsed: aiResult.modelUsed,
-          tokensConsumed: aiResult.tokensConsumed,
-          executionDurationMs: aiResult.durationMs,
-          settlementDurationMs: durationMs,
-          preimage: preimageToUse,
-          paymentHash: aiResult.paymentHash,
-          isLiveApi: aiResult.isLiveApi,
-        },
-      },
-    });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const actor = actorFromRequest(request);
+    if (!actor) throw new BackendError('AUTH_REQUIRED', 'Connect and sign with a wallet before changing task state.', 401);
+    const body = await request.json(), key = request.headers.get('idempotency-key') || undefined;
+    const backend = await getBackend();
+    let task;
+    if (!body.action || body.action === 'execute') task = await backend.executeTask(body.taskId, actor, key);
+    else if (body.action === 'accept' || body.action === 'reject') task = await backend.reviewTask(body.taskId, body.action, actor, body.note, key);
+    else if (body.action === 'cancel') task = await backend.cancelTask(body.taskId, actor, key);
+    else throw new BackendError('INVALID_TASK_INPUT', 'Unsupported task action.');
+    return NextResponse.json({ success: true, requestId, data: { task, ...backend.snapshot() } });
+  } catch (error) {
+    const known = error instanceof BackendError;
+    return NextResponse.json({ success: false, requestId, error: error instanceof Error ? error.message : 'Unexpected backend error.', code: known ? error.code : 'INTERNAL_ERROR', retryable: known ? error.retryable : false }, { status: known ? error.status : 500 });
   }
 }

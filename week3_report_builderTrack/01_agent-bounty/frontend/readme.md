@@ -1,6 +1,6 @@
 # AgentBounty Frontend dApp
 
-The interactive web interface for **AgentBounty**, built with **Next.js 14 (App Router)**, **Tailwind CSS**, and **CCC (`@ckb-ccc/connector-react`)**.
+The interactive web interface for **AgentBounty**, built with **Next.js 15 (App Router)**, **Tailwind CSS**, and **CCC (`@ckb-ccc/connector-react`)**.
 
 ---
 
@@ -19,22 +19,24 @@ The UI design is styled using the official ColorHunt theme [`#09637E`, `#088395`
 
 ## Features & Components
 
-1. **CCC Wallet Connector ([`src/components/Navbar.tsx`](./src/components/Navbar.tsx))**:
-   - Connects to Nervos CKB Testnet using `@ckb-ccc/connector-react`.
-   - Supports JoyID, UniSat, OKX, and MetaMask.
-   - Displays live CKB capacity balance and address derivation.
-2. **Fiber Channel Telemetry Card ([`src/components/ChannelStatsCard.tsx`](./src/components/ChannelStatsCard.tsx))**:
-   - Visualizes off-chain channel capacity distribution (Creator vs Worker).
-   - Live metrics: 0.00 Gas, &lt;1ms settlement finality, Layer 1 `bounty-lock` RISC-V anchor.
-3. **Bounty Marketplace Feed ([`src/components/BountyFeed.tsx`](./src/components/BountyFeed.tsx))**:
-   - Real-time task listing with filter pills (`OPEN`, `IN_PROGRESS`, `COMPLETED`).
-   - One-click autonomous agent deployment ("Dispatch Agent Worker").
-4. **Interactive Hold Invoice Inspector ([`src/components/HoldInvoiceModal.tsx`](./src/components/HoldInvoiceModal.tsx))**:
-   - Inspects HTLC state transitions (`OPEN` $\rightarrow$ `HELD` $\rightarrow$ `SETTLED`).
-   - Displays target Payment Hash $H = \text{SHA-256}(P)$ and revealed secret Preimage $P$.
-5. **Verified AI Delivery Report ([`src/components/ResultArtifactModal.tsx`](./src/components/ResultArtifactModal.tsx))**:
-   - Displays the formatted security audit report produced by the **Autonomous Intelligence Node**.
-   - Cryptographic settlement seal with on-chain proof verification.
+The workspace UI lives in `src/app/(workspace)/` (Overview, Marketplace, My Work, Payments, Evidence, task detail, publish flow) behind `src/components/workspace/WorkspaceShell.tsx`. Shared elements: `Brand.tsx`, `HeroVideo.tsx` (single root-layout backdrop video + in-flow motion toggle), `CccWrapper.tsx` (CKB testnet client).
+
+> Outdated reference: earlier revisions of this file named `Navbar.tsx`, `ChannelStatsCard.tsx`, `BountyFeed.tsx`, `HoldInvoiceModal.tsx`, and `ResultArtifactModal.tsx`. Those components were removed during the frontend completion pass; their links below are struck through and retained only as history.
+
+1. ~~CCC Wallet Connector (`src/components/Navbar.tsx`)~~ — replaced by the workspace topbar wallet button (connect/disconnect via `@ckb-ccc/connector-react`; supports JoyID, UniSat, OKX, MetaMask; testnet only).
+2. ~~Fiber Channel Telemetry Card (`src/components/ChannelStatsCard.tsx`)~~ — replaced by Overview stats and the Payments ledger. Previously displayed hard-coded speed/fee labels; those claims were removed. Payment records now identify the active adapter and its observed native states.
+3. ~~Bounty Marketplace Feed (`src/components/BountyFeed.tsx`)~~ — replaced by URL-based Marketplace search, filters, sorting, and pagination.
+4. ~~Interactive Hold Invoice Inspector (`src/components/HoldInvoiceModal.tsx`)~~ — replaced by the task-detail Payment tab and the Payments ledger. Local mock observations are labeled; native receiver and payer states appear when the calibrated FNN adapter is enabled.
+5. ~~Verified AI Delivery Report (`src/components/ResultArtifactModal.tsx`)~~ — replaced by the task-detail Result tab. Artifacts are generated text, not independently validated evidence; no "verified" badge is shown.
+
+---
+
+## Integrated implementation status (15 September 2026)
+
+- `npm run build` passes on Next.js 15.5.24. The landing page, workspace routes, publish → execute → review → settle flow, and responsive layouts have been verified in a production preview.
+- Next API routes use `agent-bounty-services` as the single state authority. Atomic files provide local persistence; hosted deployments use Supabase with revision-checked writes. Tasks, invoice projections, idempotency records, timelines, encrypted preimages, and signed receipts survive restart.
+- Mutations require a server-verified CCC wallet challenge and HTTP-only session. Execution stops at human review; the creator alone may accept settlement or request revision.
+- `PAYMENT_ADAPTER=mock` is the verified local path. Native FNN remains disabled until the funded two-node v0.9.1 spike is completed and its RPC observations are calibrated. See `UI-NOTES.md` and `../docs/manual-integration-checklist.md`.
 
 ---
 

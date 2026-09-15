@@ -1,0 +1,6 @@
+.env
+frontend/.env
+**/.data
+contracts/
+docs/fnn-spike/
+index.html

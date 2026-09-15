@@ -2,11 +2,13 @@
   "name": "agent-bounty-services",
   "version": "1.0.0",
   "description": "Fiber Network Hold Invoice Engine & Gemini Flash AI Worker for AgentBounty",
-  "main": "dist/simulate_bounty.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/simulate_bounty.ts",
-    "test": "ts-node src/simulate_bounty.ts"
+    "test": "npm run build && node --test dist/backend.test.js",
+    "check:legacy-simulation": "ts-node src/simulate_bounty.ts"
   },
   "keywords": [
     "ckb",

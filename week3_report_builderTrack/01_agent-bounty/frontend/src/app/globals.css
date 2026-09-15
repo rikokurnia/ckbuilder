@@ -1505,6 +1505,11 @@ button {
   color: var(--muted);
   line-height: 1.7;
 }
+.review-actions { display: grid; gap: 10px; margin-top: 22px; }
+.review-actions label { color: var(--muted); font-size: 12px; text-align: left; }
+.review-actions textarea { display: block; width: 100%; margin-top: 8px; color: var(--ink); }
+.review-actions .button { margin: 0; }
+.cancel-task { width: 100%; justify-content: center; color: var(--muted); margin-top: 8px; }
 .task-people {
   padding: 24px;
 }

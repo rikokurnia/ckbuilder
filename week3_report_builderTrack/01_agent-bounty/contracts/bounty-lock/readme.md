@@ -53,3 +53,15 @@ cargo test
 - **Target Architecture**: `riscv64imac-unknown-none-elf`
 - **Output Binary**: `target/riscv64imac-unknown-none-elf/release/bounty-lock`
 - **Binary Size**: ~17 KB (static, stripped, zero-dependency)
+
+---
+
+## Phase 0 implementation-status note (14 September 2026)
+
+`cargo test` now runs **4 host-side SHA-256 tests**, including the standard `abc` vector and an incremental multi-block vector. Source inspection confirms the following; the "Purpose & Design" section above is preserved as the original intent, not the verified behavior:
+
+- `cargo test` exercises **only the standalone SHA-256 module on host**. No transaction executes in CKB-VM. There are no multi-block hash vectors and no transaction-level tests.
+- **Path A (0x01)** verifies `SHA-256(preimage) == payment_hash` but constrains **no output**: any holder of the preimage can pay any recipient any amount, subject only to the global capacity check. It does not bind settlement to a worker or an agreed amount.
+- **Path B (0x02)** performs **no creator-authority check** (`creator_lock_hash` is parsed and never used), **no timeout/`since` check** (the code comment says enforcement "could" be added), and **no refund-destination constraint**. Anyone can invoke a refund at any time.
+- The capacity invariant is global output ≤ input (skipped when inputs sum to zero). It does not implement escrow-group accounting or fee-leakage limits.
+- **Consequence:** do not fund this lock with valuable capacity. Independent L1 escrow is **deferred** for Phases 0–1 by operator decision; a redesign (creator authorization, worker/refund outputs, exact args/witness parsing, checked sums, `since` comparison, CKB-VM transaction tests) is required before any L1 rail is used.

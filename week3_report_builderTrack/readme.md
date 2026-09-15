@@ -43,3 +43,14 @@ Week 3 shifts focus into **production-grade dApp engineering for the emerging Ma
 
 - **`week3_report_builderTrack/`** — Master Directory
   - [01_agent-bounty](./01_agent-bounty/) — Full-stack autonomous AI task marketplace (Rust Contract + Fiber Engine + Gemini Flash + Next.js 14 dApp)
+
+---
+
+## Phase 0 implementation-status note (14 September 2026)
+
+The descriptions above are preserved as the original project record. The following corrections apply to all AgentBounty claims until the corresponding exit gates pass:
+
+- The "Fiber Hold Invoice engine" is an **in-memory TypeScript simulation** (no FNN RPC calls, synthetic channel IDs). "Real-time," "0.00 gas," and "sub-millisecond finality" labels describe local map mutations timed with `Date.now()`, not measured network behavior.
+- The `bounty-lock` tests are **two host-side SHA-256 unit tests** (`cargo test`: 2 passed). No transaction executes in CKB-VM, and the lock does not constrain payout destination/recipient or verify creator authority on refund (see `01_agent-bounty/contracts/bounty-lock/readme.md`).
+- The frontend is a **simulation-labeled demonstrator**: wallet connection is real (CKB testnet), but balances, invoices, and task data are in-memory demo state.
+- Tracked in `../random_things/agentbounty-improvement-plan.md` (outside this repo). Phase 0 exit requires a payment/acceptance ADR and a native two-node FNN spike before any claim of real settlement.

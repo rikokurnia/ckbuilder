@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSigner } from "@ckb-ccc/connector-react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,8 +13,7 @@ import { useWorkspace } from "./WorkspaceProvider";
 import { PageHeading } from "./WorkspaceShell";
 export function CreateBounty() {
   const router = useRouter();
-  const signer = useSigner();
-  const { refresh, channel } = useWorkspace();
+  const { refresh, channel, authenticate } = useWorkspace();
   const [category, setCategory] = useState("CODE_AUDIT");
   const [title, setTitle] = useState("");
   const [brief, setBrief] = useState("");
@@ -37,7 +35,7 @@ export function CreateBounty() {
       Number(reward) > (channel?.creatorBalanceCkb ?? 0)
     ) {
       setError(
-        "Enter a positive reward with at most 8 decimals within the available demo balance.",
+        "Enter a positive reward with at most 8 decimals within the available managed balance.",
       );
       return false;
     }
@@ -48,17 +46,10 @@ export function CreateBounty() {
     if (busy || !valid()) return;
     setBusy(true);
     try {
-      const bytes = crypto.getRandomValues(new Uint8Array(32));
-      const digest = await crypto.subtle.digest("SHA-256", bytes);
-      const paymentHash = Array.from(new Uint8Array(digest))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      const creator = signer
-        ? await signer.getRecommendedAddress()
-        : "demo_guest";
+      await authenticate();
       const res = await fetch("/api/bounties", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
         body: JSON.stringify({
           title: title.trim(),
           description: brief.trim(),
@@ -67,9 +58,7 @@ export function CreateBounty() {
             "\n\nAcceptance criteria (requested, not automatically enforced):\n" +
             criteria.trim(),
           category,
-          rewardCkb: Number(reward),
-          creator,
-          paymentHash,
+          rewardCkb: reward,
         }),
       });
       const json = await res.json();
@@ -181,12 +170,11 @@ export function CreateBounty() {
                   placeholder="For example: list file references, explain each finding, and include a command to reproduce it."
                 />
                 <small>
-                  Included in the prompt. Automated enforcement is not
-                  available.
+                  Included in the prompt and checked before human review.
                 </small>
               </label>
               <label htmlFor="task-reward">
-                Demo reward (CKB)
+                Reward (CKB)
                 <input
                   id="task-reward"
                   type="text"
@@ -196,7 +184,7 @@ export function CreateBounty() {
                   onChange={(e) => setReward(e.target.value)}
                 />
                 <small>
-                  Available in simulation:{" "}
+                  Available managed balance:{" "}
                   {channel?.creatorBalanceCkb.toLocaleString() ?? "…"} CKB
                 </small>
               </label>
@@ -222,12 +210,13 @@ export function CreateBounty() {
               <h3>Acceptance criteria</h3>
               <p>{criteria}</p>
               <div className="review-reward">
-                <span>Demo reward</span>
+                <span>Reward</span>
                 <strong>{reward} CKB</strong>
               </div>
               <p className="notice-banner">
-                Publishing creates an in-memory demo task and simulated invoice.
-                It does not fund a real Fiber channel.
+                Publishing creates a durable task and an immutable server-side
+                payment commitment. The active payment adapter determines whether
+                the invoice is simulated or registered with FNN.
               </p>
               <div className="form-actions">
                 <button

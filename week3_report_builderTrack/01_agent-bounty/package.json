@@ -1,0 +1,17 @@
+{
+  "name": "agent-bounty",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "services",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace agent-bounty-frontend",
+    "test": "npm test --workspace agent-bounty-services && cargo test --manifest-path contracts/bounty-lock/Cargo.toml",
+    "start": "npm run start --workspace agent-bounty-frontend"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}
