@@ -5,7 +5,9 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: path.resolve(projectRoot, ".."),
+  // Vercel already treats this directory as the project root. Pointing the
+  // trace root at the parent makes its builder look for Next in /frontend twice.
+  outputFileTracingRoot: projectRoot,
   poweredByHeader: false,
   async headers() {
     return [{
