@@ -15,7 +15,7 @@ Then confirm `agent_bounty_state` appears in Table Editor. RLS is enabled, brows
 1. Import the Git repository in Vercel.
 2. Set **Root Directory** to `week3_report_builderTrack/01_agent-bounty/frontend`.
 3. Enable **Include source files outside of the Root Directory** so the internal `../services` workspace package is bundled.
-4. Keep Framework Preset as Next.js. `frontend/vercel.json` installs the parent npm workspace and uses the standard `.next` output.
+4. Keep Framework Preset as Next.js. `frontend/vercel.json` performs locked installs for `services` and `frontend` independently so Vercel's packager finds Next inside the application root, then uses the standard `.next` output.
 5. Use Node.js 22.x.
 
 ## 3. Configure Vercel environment variables
