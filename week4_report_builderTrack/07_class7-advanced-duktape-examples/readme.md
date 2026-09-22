@@ -46,9 +46,10 @@ In this module, we authored a JavaScript validation contract verifying cell capa
 
 ---
 
-## 📸 Screenshots & Proof of Work
+## 📸 Verification & Proof of Work
 
-![Class 7 Execution Proof](./images/class7.png)
+> Verified directly via on-chain transaction logs and CKB Testnet Explorer:  
+> **Transaction Hash**: [`0xf45acdca6873eb9e9252580ac495d535587f77cd8ffe6f749dd6ee142049f827`](https://pudge.explorer.nervos.org/transaction/0xf45acdca6873eb9e9252580ac495d535587f77cd8ffe6f749dd6ee142049f827) (Committed in Block `#22,501,597`).
 
 ---
 
