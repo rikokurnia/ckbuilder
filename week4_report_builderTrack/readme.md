@@ -1,16 +1,16 @@
-# 🏆 Week 4 Builder Track Master Report (Part 1 & 2: Classes 1 – 8)
+# 🏆 Week 4 Builder Track Master Report (Classes 1 – 10 Complete)
 
 **Name Builder**: Riko Kurnia Sandi  
 **Track**: CKB Builder Track  
-**Focus**: CKB Script Development Course (Validation Model, Script Basics, sUDT, WebAssembly on CKB, Debugging / Cycle Profiling, Type ID, Advanced Duktape, and Performant WASM)
+**Focus**: CKB Script Development Course (Full Curriculum: Validation Model, Script Basics, sUDT, WASM, Debugging, Type ID, Duktape, Performant WASM, Cycle Reductions, and Language Choices)
 
 ---
 
 ## 🌟 Executive Summary
 
-This master report documents the practical execution, theoretical synthesis, and live on-chain testnet verification for **Week 4 (Intermediate Section)** of the *CKB Builder Handbook*. 
+This master report documents the comprehensive practical execution, architectural synthesis, and live on-chain testnet verification for **Week 4 (Intermediate Section)** of the *CKB Builder Handbook*. 
 
-Week 4 marks the transition from basic dApp integrations to deep, bare-metal **CKB Script Development**. The course modules completed so far encompass:
+Week 4 completes the entire **CKB Script Development Course (Classes 1 – 10)**, establishing deep mastery over the CKB-VM RISC-V execution environment, smart contract primitives, multi-language paradigms, and computational optimization:
 1. **The CKB-VM Validation Model (Class 1)**: Contrasting CKB's off-chain computation / on-chain verification paradigm against traditional EVM execution models, and enforcing the separation between Lock Scripts (authentication) and Type Scripts (state invariants).
 2. **Script Anatomy & Resolution (Class 2)**: Analyzing `code_hash`, `hash_type` (`data` vs `type` / Type ID), dynamic `args` parameterization, `cell_deps` resolution, and RISC-V syscalls.
 3. **User Defined Tokens (Class 3)**: Implementing the official Simple UDT standard (sUDT - RFC 0025) as first-class token citizens, serializing 128-bit unsigned integers in little-endian format, and validating issuance invariants.
@@ -19,12 +19,14 @@ Week 4 marks the transition from basic dApp integrations to deep, bare-metal **C
 6. **Type ID & Upgradability (Class 6)**: Implementing CKB RFC 0022 for immutable, globally unique script identity and seamless contract upgradability.
 7. **Advanced Duktape on CKB-VM (Class 7)**: Deploying on-chain JavaScript contracts using `ckb-js-vm` (Duktape engine compiled to RISC-V) and CKB syscall bindings.
 8. **Performant WASM (Class 8)**: Minimizing WASM binary footprints, heapless execution, and integer arithmetic optimization for low-cycle CKB-VM execution.
+9. **Cycle Reductions in Duktape Script (Class 9)**: Applying bytecode pre-compilation, local syscall caching, flat loop dispatch, and early exit guards to minimize JavaScript cycle consumption.
+10. **Language Choices for CKB (Class 10)**: Comprehensive trade-off analysis comparing Rust (`ckb-std`), C/C++, JavaScript (`ckb-js-vm`), and WebAssembly (WASM) on CKB-VM.
 
 Every single class was verified with a live transaction broadcasted and committed on the **CKB Public Testnet (Pudge)**.
 
 ---
 
-## 📊 On-Chain Verification Summary Matrix (Classes 1 – 8)
+## 📊 On-Chain Verification Summary Matrix (Classes 1 – 10)
 
 | Class / Module | Focus / Primitive | Transaction Hash | Block Number | Status |
 | :--- | :--- | :--- | :---: | :---: |
@@ -36,6 +38,8 @@ Every single class was verified with a live transaction broadcasted and committe
 | **06 - Type ID** | RFC 0022 deterministic args calculation | [`0x923474ed7e...e36948`](https://pudge.explorer.nervos.org/transaction/0x923474ed7ec0ea1222ced36052bddcbb6846154fc926b53bad510f99cfe36948) | `#22,501,507` | 🟢 Committed |
 | **07 - Advanced Duktape** | `ckb-js-vm` on-chain JavaScript smart contract | [`0xf45acdca68...049f827`](https://pudge.explorer.nervos.org/transaction/0xf45acdca6873eb9e9252580ac495d535587f77cd8ffe6f749dd6ee142049f827) | `#22,501,597` | 🟢 Committed |
 | **08 - Performant WASM** | 43-byte stripped integer arithmetic WASM module | [`0xf2c3da03ad...d88353c`](https://pudge.explorer.nervos.org/transaction/0xf2c3da03add69fd218d604dc41c6bdd2e4c16b8b64b76ee32a5055352d88353c) | `#22,501,607` | 🟢 Committed |
+| **09 - Cycle Reductions** | Optimized Duktape contract, 1.65M cycles | [`0xbf5a13ab46...592eb`](https://pudge.explorer.nervos.org/transaction/0xbf5a13ab466e705d22b8ce96cc06fbdcfa90f354d98ddf6c9f0cba31a9b592eb) | `#22,501,972` | 🟢 Committed |
+| **10 - Language Choices** | Multi-language architecture commitment cell | [`0x6fbbcbe1ce...81912`](https://pudge.explorer.nervos.org/transaction/0x6fbbcbe1cecac223961651d472406e4f6d7408868bcd5a09de48b12bf2281912) | `#22,501,979` | 🟢 Committed |
 
 ---
 
@@ -82,6 +86,16 @@ Every single class was verified with a live transaction broadcasted and committe
 - **Code**: [`performant_wasm_demo.js`](./08_class8-performant-wasm/scripts/performant_wasm_demo.js)
 - **Tx Hash**: [`0xf2c3da03add69fd218d604dc41c6bdd2e4c16b8b64b76ee32a5055352d88353c`](https://pudge.explorer.nervos.org/transaction/0xf2c3da03add69fd218d604dc41c6bdd2e4c16b8b64b76ee32a5055352d88353c)
 
+### 9️⃣ [09 - Cycle Reductions in Duktape Script](./09_class9-cycle-reductions-in-duktape-script/readme.md)
+- **Concepts**: Bytecode pre-compilation, syscall caching, prototype minimization, early exit guards, and cycle profiling (1.65M cycles).
+- **Code**: [`cycle_reduction_demo.js`](./09_class9-cycle-reductions-in-duktape-script/scripts/cycle_reduction_demo.js)
+- **Tx Hash**: [`0xbf5a13ab466e705d22b8ce96cc06fbdcfa90f354d98ddf6c9f0cba31a9b592eb`](https://pudge.explorer.nervos.org/transaction/0xbf5a13ab466e705d22b8ce96cc06fbdcfa90f354d98ddf6c9f0cba31a9b592eb)
+
+### 🔟 [10 - Language Choices](./10_class10-language-choices/readme.md)
+- **Concepts**: Comparative architecture and trade-off analysis across Rust (`ckb-std`), C/C++, JavaScript (`ckb-js-vm`), and WebAssembly (WASM).
+- **Code**: [`language_comparison_demo.js`](./10_class10-language-choices/scripts/language_comparison_demo.js)
+- **Tx Hash**: [`0x6fbbcbe1cecac223961651d472406e4f6d7408868bcd5a09de48b12bf2281912`](https://pudge.explorer.nervos.org/transaction/0x6fbbcbe1cecac223961651d472406e4f6d7408868bcd5a09de48b12bf2281912)
+
 ---
 
 ## 📂 Directory Structure & Quick Navigation
@@ -123,6 +137,12 @@ week4_report_builderTrack/
 │   ├── readme.md
 │   ├── scripts/performant_wasm_demo.js
 │   └── images/
-├── 09_class9-cycle-reductions-in-duktape-script/ <-- (Upcoming: Part 3)
-└── 10_class10-language-choices/               <-- (Upcoming: Part 3)
+├── 09_class9-cycle-reductions-in-duktape-script/ <-- Class 9: Cycle Reductions
+│   ├── readme.md
+│   ├── scripts/cycle_reduction_demo.js
+│   └── images/
+└── 10_class10-language-choices/               <-- Class 10: Language Choices
+    ├── readme.md
+    ├── scripts/language_comparison_demo.js
+    └── images/
 ```
