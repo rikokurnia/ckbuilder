@@ -1,0 +1,63 @@
+{
+  "mock_info": {
+    "description": "Class 5 Debugging Mock Transaction Dump for CKB-Debugger",
+    "target_network": "ckb_testnet",
+    "created_at": "2026-09-22T11:19:31.583Z"
+  },
+  "transaction": {
+    "version": "0",
+    "cell_deps": [
+      {
+        "outPoint": {
+          "txHash": "0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37",
+          "index": "0"
+        },
+        "depType": "depGroup"
+      }
+    ],
+    "header_deps": [],
+    "inputs": [
+      {
+        "previousOutput": {
+          "txHash": "0x979808996507c2742e120f9f4e260c8613751cc69b0daa54fd3c64fcfe98043c",
+          "index": "1"
+        },
+        "since": "0",
+        "cellOutput": {
+          "capacity": "6293299952130",
+          "lock": {
+            "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+            "hashType": "type",
+            "args": "0xc478c338ac607c24a06ba3678dd015dade8dd7e5"
+          }
+        },
+        "outputData": "0x"
+      }
+    ],
+    "outputs": [
+      {
+        "capacity": "15000000000",
+        "lock": {
+          "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+          "hashType": "type",
+          "args": "0xc478c338ac607c24a06ba3678dd015dade8dd7e5"
+        }
+      },
+      {
+        "capacity": "6278299951354",
+        "lock": {
+          "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+          "hashType": "type",
+          "args": "0xc478c338ac607c24a06ba3678dd015dade8dd7e5"
+        }
+      }
+    ],
+    "outputs_data": [
+      "0x434b422044656275676765723a204379636c6520416e616c797369732026204d6f636b2054782044756d70205b436c61737320355d",
+      "0x"
+    ],
+    "witnesses": [
+      "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "week4-script-course",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.19.1"
+  }
+}
