@@ -81,6 +81,8 @@ We implemented a full schema parser and codec generation pipeline in [`scripts/t
 
 ### Execution Output:
 
+![Molecule Tooling Pipeline Proof](./images/foto-4.png)
+
 ```text
 Molecule Compiler (moleculec) Architecture & Code Generation
 ------------------------------------------------------------

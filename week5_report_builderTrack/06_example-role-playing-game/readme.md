@@ -85,17 +85,19 @@ We executed [`scripts/rpg_onchain_demo.js`](./scripts/rpg_onchain_demo.js) to se
 ### Live On-Chain Parameters:
 - **Network**: CKB Testnet (Pudge)
 - **Signer Address**: `ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr`
-- **Transaction Hash**: [`0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed`](https://pudge.explorer.nervos.org/transaction/0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed)
-- **Confirmed in Block**: `#22,582,891`
+- **Transaction Hash**: [`0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02`](https://pudge.explorer.nervos.org/transaction/0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02)
+- **Confirmed in Block**: `#22,583,103`
 - **Output Capacity**: `220.0 CKB`
 
-### Execution Log:
+### Execution Proof & Terminal Log:
+
+![RPG Molecule On-Chain Verification Proof](./images/foto-6.png)
 
 ```text
 Role-Playing Game (RPG) Molecule On-Chain Testnet Verification
 -------------------------------------------------------------
 Signer address : ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr
-Current balance: 60179.99942124 CKB
+Current balance: 59766.999409 CKB
 
 Serialized Molecule Character State:
   Payload Byte Length : 352 bytes
@@ -103,10 +105,10 @@ Serialized Molecule Character State:
 
 Constructing on-chain transaction with serialized cell data...
 Signing and broadcasting transaction to CKB Testnet...
-Transaction Hash: 0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed
-Explorer URL    : https://pudge.explorer.nervos.org/transaction/0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed
-Waiting for transaction confirmation on CKB Testnet....
-Transaction confirmed in block #22,582,891!
+Transaction Hash: 0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02
+Explorer URL    : https://pudge.explorer.nervos.org/transaction/0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02
+Waiting for transaction confirmation on CKB Testnet......
+Transaction confirmed in block #22,583,103!
 
 Fetching live cell data from CKB Testnet RPC...
   On-chain data received: 706 bytes
@@ -120,7 +122,7 @@ Deserialized On-Chain Character Object:
   Skills Count: 2 skills (First: "Cell Partition Blast", Mana: 85)
 
 Roundtrip On-Chain Verification: PASSED (100% Exact Match)
-On-Chain Block Number: #22582891
+On-Chain Block Number: #22583103
 ```
 
 ---

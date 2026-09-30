@@ -113,6 +113,8 @@ table CellOutput {
 
 We executed the complete type system test in [`scripts/schema_validation_demo.js`](./scripts/schema_validation_demo.js):
 
+![Molecule Schema Language Validation Proof](./images/foto3.png)
+
 ```text
 Molecule Schema Language Type System Verification
 --------------------------------------------------

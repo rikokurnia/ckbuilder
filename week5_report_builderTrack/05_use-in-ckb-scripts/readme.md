@@ -58,6 +58,8 @@ We authored a production-grade `#![no_std]` Rust contract in [`contracts/molecul
 
 We executed the complete CKB-VM inspection simulation suite in [`scripts/script_molecule_inspection.js`](./scripts/script_molecule_inspection.js), testing three critical boundary scenarios:
 
+![CKB-VM Script Molecule Inspection Proof](./images/foto-5.png)
+
 ```text
 CKB-VM Script Molecule Verification Simulation
 ----------------------------------------------

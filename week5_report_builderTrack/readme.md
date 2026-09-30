@@ -28,7 +28,7 @@ In addition to the official Nervos serialization curriculum, this week features 
 | [**03_encoding-specs**](./03_encoding-specs/readme.md) | Byte-Level Specifications | Little-Endian 32-bit offsets, header sizing formulas, memory alignment | [`encoding_specs_walkthrough.js`](./03_encoding-specs/scripts/encoding_specs_walkthrough.js) (Hex memory maps) |
 | [**04_tools-molecule**](./04_tools-molecule/readme.md) | Tooling & Code Generation | `moleculec` compiler, JSON AST plugin architecture, Rust/C/TS generation | [`tooling_pipeline_demo.js`](./04_tools-molecule/scripts/tooling_pipeline_demo.js) (Automated AST code emission) |
 | [**05_use-in-ckb-scripts**](./05_use-in-ckb-scripts/readme.md) | On-Chain CKB Scripts | Ingesting cell data via syscalls, zero-copy pointer slicing, invariant exit codes | [`molecule_validator_sample.rs`](./05_use-in-ckb-scripts/contracts/molecule_validator_sample.rs) & [`script_molecule_inspection.js`](./05_use-in-ckb-scripts/scripts/script_molecule_inspection.js) |
-| [**06_example-role-playing-game**](./06_example-role-playing-game/readme.md) | End-to-End RPG On-Chain | Live CKB Testnet transaction storing complex nested RPG character in `cell_data` | **Tx**: [`0x2a8380f5...d933ed`](https://pudge.explorer.nervos.org/transaction/0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed) (Block `#22,582,891`) |
+| [**06_example-role-playing-game**](./06_example-role-playing-game/readme.md) | End-to-End RPG On-Chain | Live CKB Testnet transaction storing complex nested RPG character in `cell_data` | **Tx**: [`0x8f07ac16...ccc6b02`](https://pudge.explorer.nervos.org/transaction/0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02) (Block `#22,583,103`) |
 
 ---
 
@@ -46,6 +46,9 @@ In addition to the official Nervos serialization curriculum, this week features 
   - **Molecule vs Ethereum SSZ**: SSZ shares Molecule's offset table philosophy but is inextricably bound to Merkle tree chunking (`hash_tree_root`). Molecule is a pure, general-purpose binary system format.
   - **Molecule vs Borsh**: Borsh is compact but lacks offset headers, requiring sequential scanning to reach deeply nested fields. Molecule provides $O(1)$ direct field lookup.
 
+### Execution Proof:
+![Molecule Features & Benchmarks Proof](./images/foto-1.png)
+
 ---
 
 ## 2️⃣ 02 - Molecule Schema Language & Type System
@@ -58,6 +61,9 @@ In addition to the official Nervos serialization curriculum, this week features 
   - **Dynamic-Size**: Fixvec (`vector Foo <Bar>;`), Dynvec (`vector Dynamic <Bytes>;`), `table { ... }` (header with total size and field offsets), `option`, and tagged `union`.
 - **Ecosystem Reference**: Examined how Nervos models core consensus objects in [`schemas/blockchain.mol`](./02_schema-language/schemas/blockchain.mol) (`CellOutput`, `Script`, `RawTransaction`, `Transaction`).
 
+### Execution Proof:
+![Molecule Schema Language Proof](./images/foto3.png)
+
 ---
 
 ## 3️⃣ 03 - Byte-Level Encoding Specifications & Memory Layouts
@@ -68,6 +74,10 @@ In addition to the official Nervos serialization curriculum, this week features 
   - Table / Dynvec header length is strictly $4 \times (N + 1)$ bytes.
   - Offset $O_0 = 4 \times (N + 1)$, with each subsequent offset $O_i = O_{i-1} + \text{len}(F_{i-1})$.
 - **Visual Memory Maps**: Built detailed hex memory diagrams illustrating the exact layout of Structs, Fixvecs, Dynvecs, Tables, and Unions.
+
+### Execution Proof:
+![Encoding Specifications Proof Part 1](./images/foto-2.png)
+![Encoding Specifications Proof Part 2](./images/foto2-2.png)
 
 ---
 
@@ -80,6 +90,9 @@ In addition to the official Nervos serialization curriculum, this week features 
   - Implemented an automated parser pipeline converting `.mol` definitions into dynamic JavaScript/TypeScript codecs via `@ckb-ccc/core`.
   - Documented Cargo `build.rs` integration for automated contract compilation.
 
+### Execution Proof:
+![Molecule Tooling Pipeline Proof](./images/foto-4.png)
+
 ---
 
 ## 5️⃣ 05 - Using Molecule in CKB Scripts & On-Chain Verification
@@ -91,6 +104,9 @@ In addition to the official Nervos serialization curriculum, this week features 
   - Authored bare-metal Rust contract [`contracts/molecule_validator_sample.rs`](./05_use-in-ckb-scripts/contracts/molecule_validator_sample.rs) enforcing state version invariants with zero heap allocations.
   - Simulated boundary conditions: Valid state (`Exit 0`), Invariant violation (`Exit 5`), Corrupted header (`Exit 4`).
 
+### Execution Proof:
+![CKB-VM Script Molecule Verification Proof](./images/foto-5.png)
+
 ---
 
 ## 6️⃣ 06 - Role-Playing Game (RPG) On-Chain Implementation
@@ -100,10 +116,13 @@ In addition to the official Nervos serialization curriculum, this week features 
 - **Complex Domain Modeling**:
   - Modeled a full RPG Hero character (`PlayerCharacter`) with nested `Attributes` (struct), `Inventory` (vector of items), and `Skills` (vector of combat abilities).
 - **Live On-Chain CKB Testnet (Pudge) Deployment**:
-  - **Transaction Hash**: [`0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed`](https://pudge.explorer.nervos.org/transaction/0x2a8380f59fee9bbd88e5c881142cd96b8c9dba9d667609e14e86fba9c5d933ed)
-  - **Confirmed Block**: `#22,582,891`
+  - **Transaction Hash**: [`0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02`](https://pudge.explorer.nervos.org/transaction/0x8f07ac16a7be7438736e9c56d6682b0cc623ffecb1a706e2c00e5456eccc6b02)
+  - **Confirmed Block**: `#22,583,103`
   - **Output Capacity**: `220.0 CKB`
   - **State Integrity**: Successfully fetched live cell data from the blockchain and deserialized it back to structured objects with 100% roundtrip consistency.
+
+### Execution Proof:
+![RPG Molecule On-Chain Verification Proof](./images/foto-6.png)
 
 ---
 
@@ -113,11 +132,23 @@ In addition to the official Nervos serialization curriculum, this week features 
 week5_report_builderTrack/
 ├── package.json
 ├── readme.md (Master Report)
+├── images/
+│   ├── foto-1.png
+│   ├── foto-2.png
+│   ├── foto2-2.png
+│   ├── foto3.png
+│   ├── foto-4.png
+│   ├── foto-5.png
+│   └── foto-6.png
 ├── 01_features-and-architecture/
+│   ├── images/
+│   │   └── foto-1.png
 │   ├── readme.md
 │   └── scripts/
 │       └── molecule_features_demo.js
 ├── 02_schema-language/
+│   ├── images/
+│   │   └── foto3.png
 │   ├── schemas/
 │   │   ├── types_demo.mol
 │   │   └── blockchain.mol
@@ -125,22 +156,31 @@ week5_report_builderTrack/
 │   └── scripts/
 │       └── schema_validation_demo.js
 ├── 03_encoding-specs/
+│   ├── images/
+│   │   ├── foto-2.png
+│   │   └── foto2-2.png
 │   ├── readme.md
 │   └── scripts/
 │       └── encoding_specs_walkthrough.js
 ├── 04_tools-molecule/
+│   ├── images/
+│   │   └── foto-4.png
 │   ├── schemas/
 │   │   └── demo.mol
 │   ├── readme.md
 │   └── scripts/
 │       └── tooling_pipeline_demo.js
 ├── 05_use-in-ckb-scripts/
+│   ├── images/
+│   │   └── foto-5.png
 │   ├── contracts/
 │   │   └── molecule_validator_sample.rs
 │   ├── readme.md
 │   └── scripts/
 │       └── script_molecule_inspection.js
 └── 06_example-role-playing-game/
+    ├── images/
+    │   └── foto-6.png
     ├── schemas/
     │   └── rpg.mol
     ├── readme.md

@@ -81,6 +81,9 @@ Total: 10 bytes
 
 We ran [`scripts/encoding_specs_walkthrough.js`](./scripts/encoding_specs_walkthrough.js) to inspect the exact byte dumps:
 
+![Encoding Specs Proof Part 1](./images/foto-2.png)
+![Encoding Specs Proof Part 2](./images/foto2-2.png)
+
 ```text
 Molecule Byte-Level Encoding Specifications Walkthrough
 ------------------------------------------------------

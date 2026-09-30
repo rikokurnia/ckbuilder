@@ -69,6 +69,8 @@ We implemented an executable test suite in [`scripts/molecule_features_demo.js`]
 
 ### Execution Output:
 
+![Molecule Features Execution Proof](./images/foto-1.png)
+
 ```text
 Molecule Serialization Architecture & Feature Analysis
 ------------------------------------------------------
