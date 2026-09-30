@@ -1,0 +1,48 @@
+// Molecule Role-Playing Game (RPG) Schema
+// Reference: docs.nervos.org/docs/serialization/example-role-playing-game
+
+array Uint8  [byte; 1];
+array Uint16 [byte; 2];
+array Uint32 [byte; 4];
+array Uint64 [byte; 8];
+
+vector Bytes <byte>;
+
+// Hero Attributes (Fixed Struct)
+struct Attributes {
+    strength:     Uint16,
+    agility:      Uint16,
+    intelligence: Uint16,
+    vitality:     Uint16,
+}
+
+// Inventory Item (Dynamic Table)
+table Item {
+    id:          Uint32,
+    name:        Bytes,
+    rarity:      byte,      // 0 = Common, 1 = Rare, 2 = Epic, 3 = Legendary
+    power_bonus: Uint16,
+}
+
+vector Inventory <Item>;
+
+// Combat Skill (Dynamic Table)
+table Skill {
+    id:          Uint32,
+    name:        Bytes,
+    mana_cost:   Uint16,
+    cooldown_s:  byte,
+}
+
+vector Skills <Skill>;
+
+// Top-Level Player Character (Dynamic Table)
+table PlayerCharacter {
+    character_id: Uint32,
+    name:         Bytes,
+    level:        Uint16,
+    experience:   Uint64,
+    attributes:   Attributes,
+    inventory:    Inventory,
+    skills:       Skills,
+}

@@ -1,0 +1,19 @@
+// Sample Schema for Molecule Tooling Pipeline
+// Used to test moleculec compilation and code generation
+
+array Hash256 [byte; 32];
+array Uint32 [byte; 4];
+array Uint64 [byte; 8];
+
+vector Bytes <byte>;
+
+struct Header {
+    version:   Uint32,
+    timestamp: Uint64,
+}
+
+table WitnessPayload {
+    header: Header,
+    pubkey: Bytes,
+    signature: Bytes,
+}

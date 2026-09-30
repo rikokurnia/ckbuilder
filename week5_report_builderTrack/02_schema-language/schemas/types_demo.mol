@@ -1,0 +1,52 @@
+// Molecule Schema Language Demonstration Schema
+// Demonstrating all 6 canonical compound data types supported by Molecule
+
+// 1. Primitive Byte
+// The atomic unit in Molecule is always 'byte' (8-bit unsigned integer).
+
+// 2. Array: Fixed-length contiguous sequence of a fixed-size type
+array Byte32 [byte; 32];
+array Uint32 [byte; 4];
+array Uint64 [byte; 8];
+
+// 3. Struct: Fixed-size composite structure (all fields MUST be fixed-size)
+// Total size is strictly the sum of all inner fields (Zero header overhead)
+struct OutPoint {
+    tx_hash: Byte32,
+    index:   Uint32,
+}
+
+struct Point2D {
+    x: Uint32,
+    y: Uint32,
+}
+
+// 4. Vector: Dynamic-length sequence of items
+// 4a. Fixvec: Sequence of fixed-size items (e.g. byte or struct)
+vector Bytes <byte>;
+vector OutPointVec <OutPoint>;
+
+// 4b. Dynvec: Sequence of dynamic-size items (e.g. vector or table)
+vector BytesVec <Bytes>;
+
+// 5. Option: Optional field (0 bytes if None, inner bytes if Some)
+option BytesOpt (Bytes);
+option OutPointOpt (OutPoint);
+
+// 6. Union: Tagged enum / polymorphic variant
+// Serialized as 4-byte Item ID (uint32 LE) + inner variant payload
+union ActionPayload {
+    Bytes,
+    OutPoint,
+    Point2D,
+}
+
+// 7. Table: Dynamic composite structure with offset header
+// Fields can be fixed-size, variable-size, options, or unions
+table UserProfile {
+    user_id:    Uint32,
+    username:   Bytes,
+    outpoint:   OutPointOpt,
+    tags:       BytesVec,
+    action:     ActionPayload,
+}

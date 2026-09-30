@@ -1,0 +1,24 @@
+{
+  "name": "week5-report-buildertrack",
+  "version": "1.0.0",
+  "description": "Nervos CKB Builder Track Week 5 - Canonical Data Serialization with Molecule, Schema Specifications, and Comparative Analysis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ckb",
+    "nervos",
+    "molecule",
+    "serialization",
+    "zero-copy",
+    "risc-v",
+    "schema",
+    "rpg"
+  ],
+  "author": "Riko Kurnia Sandi",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.22.0"
+  }
+}
