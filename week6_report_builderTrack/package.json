@@ -1,0 +1,10 @@
+{
+  "name": "week6-dao-track",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nervos CKB Builder Track Week 6 - Nervos DAO (deposit, withdraw phases, dao.c, nervdao portal)",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.22.0"
+  }
+}
