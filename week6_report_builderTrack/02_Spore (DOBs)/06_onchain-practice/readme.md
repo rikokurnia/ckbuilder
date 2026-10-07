@@ -42,11 +42,9 @@ A read-only verifier re-queries all three via `get_transaction` so anyone can re
 
 ## 📸 Screenshots & Proof of Work
 
-![Spore Mint Execution Proof](./images/foto-6a.png)
-![Spore Transfer Execution Proof](./images/foto-6b.png)
-![Lifecycle Verify Proof](./images/foto-6c.png)
+![Lifecycle Verify Proof (read-only, all 3 txs committed)](./images/foto-6c.png)
 
-> Save captures as `06_onchain-practice/images/foto-6a.png` (mint), `foto-6b.png` (transfer), `foto-6c.png` (verify). Run commands below, screenshot.
+> Mint/transfer captures (`foto-6a.png`, `foto-6b.png`) can be added by re-running the live scripts below; verify proof above is sufficient and spend-free.
 
 ---
 

@@ -21,8 +21,6 @@ Melt is intentionally **shape-only** here: our Week6 DOB is meltable (no `immort
 
 ![Recipes Execution Proof](./images/foto-3.png)
 
-> Save terminal capture as `03_how-to-recipes/images/foto-3.png`.
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

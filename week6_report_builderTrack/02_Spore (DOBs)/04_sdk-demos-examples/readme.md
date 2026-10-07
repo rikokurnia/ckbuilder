@@ -21,8 +21,6 @@ Ownership is lock-agnostic: Week6 uses `secp256k1_blake160` (same key as Week4/5
 
 ![SDK Demos Execution Proof](./images/foto-4.png)
 
-> Save terminal capture as `04_sdk-demos-examples/images/foto-4.png`.
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

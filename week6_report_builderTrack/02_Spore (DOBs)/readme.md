@@ -123,7 +123,7 @@ flowchart LR
 
 ### Execution Proof:
 
-> Save captures as `06_onchain-practice/images/foto-6a.png` (mint), `foto-6b.png` (transfer), `foto-6c.png` (verify).
+> Lifecycle verify proof lives at `06_onchain-practice/images/foto-6c.png` (see sub-report).
 
 ---
 
@@ -179,7 +179,7 @@ flowchart LR
     ├── scripts/spore_mint_demo.js (live, spends)
     ├── scripts/spore_transfer_demo.js (live, spends)
     ├── scripts/spore_lifecycle_verify.js (read-only, screenshot this)
-    └── images/foto-6a.png, foto-6b.png, foto-6c.png (user screenshots)
+    └── images/foto-6c.png (verify proof)
 ```
 
 ---

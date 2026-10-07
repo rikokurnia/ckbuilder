@@ -21,8 +21,6 @@ Our Week6 DOB is DOB/0 direct-JSON so it needs **no VM decoder** — this module
 
 ![Decoder Execution Proof](./images/foto-5.png)
 
-> Save terminal capture as `05_decoder-server/images/foto-5.png`.
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

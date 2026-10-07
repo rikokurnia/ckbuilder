@@ -21,8 +21,6 @@ This module proves the data model offline with `@spore-sdk/core` Molecule codecs
 
 ![Spore 101 Execution Proof](./images/foto-1.png)
 
-> Save terminal capture as `01_spore-protocol-intro/images/foto-1.png` (run script below, screenshot).
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

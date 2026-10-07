@@ -21,8 +21,6 @@ Our Week6 mint is intentionally **DOB/0-style** (pure `application/json`, 457 B,
 
 ![DOB Cookbook Execution Proof](./images/foto-2.png)
 
-> Save terminal capture as `02_dob-cookbook/images/foto-2.png`.
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution
