@@ -58,7 +58,9 @@ Executable: [`scripts/dao_economics_demo.js`](./scripts/dao_economics_demo.js)
 🏁 Week6-01 Economics Check Complete!
 ```
 
-> 📸 **Screenshot**: save terminal output as `images/foto-1.png` (user captures locally).
+> 📸 **Execution Proof**: terminal run of `dao_economics_demo.js` (tip #22,658,943, AR 1.192737536945):
+>
+> ![Economics terminal proof](./images/foto-1.png)
 
 ---
 

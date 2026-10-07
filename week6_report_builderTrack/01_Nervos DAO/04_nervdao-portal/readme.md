@@ -34,9 +34,13 @@ We reproduced the portal flow headlessly with the builder key:
 
 ---
 
-## 📸 Screenshots & Proof of Work
+## 📸 Execution Proof
 
-> Save terminal capture as `./images/foto-4.png`. Optional: capture https://test.nervdao.com/ showing same DAO cell.
+Terminal run of `nervdao_portal_demo.js` — 1 withdrawing cell, profit `0.00000409 CKB`, claim `14139`, phase-2 gated:
+
+![NervDAO portal terminal proof](./images/foto-4.png)
+
+> Optional: capture https://test.nervdao.com/ showing same DAO cell.
 
 ---
 

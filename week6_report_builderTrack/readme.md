@@ -42,7 +42,7 @@ Building on Week 4 (Script course) and Week 5 (Molecule), Week 6 proves DAO stat
 
 ### Execution Proof:
 
-> Save terminal capture as `01_Nervos DAO/01_understanding-nervos-dao/images/foto-1.png` (run script below, screenshot).
+![Economics terminal proof](./01_Nervos%20DAO/01_understanding-nervos-dao/images/foto-1.png)
 
 ---
 
@@ -81,7 +81,7 @@ Building on Week 4 (Script course) and Week 5 (Molecule), Week 6 proves DAO stat
 
 ### Execution Proof:
 
-> Save terminal capture as `01_Nervos DAO/04_nervdao-portal/images/foto-4.png`.
+![NervDAO portal terminal proof](./01_Nervos%20DAO/04_nervdao-portal/images/foto-4.png)
 
 ---
 
