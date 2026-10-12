@@ -1,0 +1,13 @@
+{
+  "name": "week7-rgbpp-track",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nervos CKB Builder Track Week 7 - RGB++ Protocol (isomorphic binding, light paper, deployments, CCC RGB++ SDK, live Pudge practice)",
+  "author": "Riko Kurnia Sandi",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.23.0",
+    "rgbpp": "^0.7.4"
+  }
+}
