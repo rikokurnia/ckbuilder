@@ -1,0 +1,18 @@
+[package]
+name = "ckb-ssri-std"
+version = "0.0.1"
+edition = "2021"
+description = "SDK for implementing SSRI-compliant smart contracts on CKB"
+license = "MIT"
+repository = "https://github.com/ckb-devrel/ckb-ssri-std"
+documentation = "https://docs.rs/ckb-ssri-std"
+readme = "README.md"
+authors = ["Alive24 <xct24@live.com>"]
+keywords = ["ckb", "nervos", "blockchain", "smart-contracts", "ssri"]
+categories = ["cryptography::cryptocurrencies", "development-tools"]
+
+[dependencies]
+ckb-std = { version = "0.16.4", features = ["allocator", "ckb-types"] }
+serde_molecule = { version = "1.1.0", default-features = false, features = ["alloc"] }
+serde = { version = "1.0.210", default-features = false, features = ["derive"] }
+ckb-ssri-std-proc-macro = { version = "0.0.1", path = "../ckb-ssri-std-proc-macro" }

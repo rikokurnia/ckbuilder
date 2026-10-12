@@ -1,0 +1,10 @@
+{
+  "name": "week7-ssri-track",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nervos CKB Builder Track Week 7 - SSRI (Script-Sourced Rich Information) + Pausable UDT",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.22.0"
+  }
+}

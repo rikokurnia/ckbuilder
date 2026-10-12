@@ -1,0 +1,29 @@
+diff --git a/src/ssri_vm.rs b/src/ssri_vm.rs
+index f3e7c55..78b60a6 100644
+--- a/src/ssri_vm.rs
++++ b/src/ssri_vm.rs
+@@ -390,15 +390,15 @@ impl<M: SupportMachine<REG = u64>> Syscalls<M> for Context {
+             // find_cell_data_by_out_point - code
+             2297 => self.find_cell_data_by_out_point(machine)?,
+ 
+-            // set_content - code
+-            // 2103 => {
+-            //     let addr = machine.registers()[A0].to_u64();
+-            //     let len = machine.registers()[A1];
+-            //     let len = machine.memory_mut().load64(&len)?;
+-
+-            //     *self.content.clone().lock().unwrap() =
+-            //         Some(machine.memory_mut().load_bytes(addr, len)?);
+-            // }
++            // set_content - code (compat: prototype ckb-std calls 2103)
++            2103 => {
++                let addr = machine.registers()[A0].to_u64();
++                let len = machine.registers()[A1];
++                let len = machine.memory_mut().load64(&len)?;
++
++                *self.content.clone().lock().unwrap() =
++                    Some(machine.memory_mut().load_bytes(addr, len)?);
++            }
+             // pipe - code
+             2604 => self.pipe(machine)?,
+             // write - code
