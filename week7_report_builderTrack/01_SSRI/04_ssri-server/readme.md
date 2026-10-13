@@ -35,7 +35,9 @@
 
 Executable [`scripts/ssri_server_demo.js`](./scripts/ssri_server_demo.js) runs **LIVE** when the server is up, otherwise prints this verified transcript (labeled 📼 recorded) — start the server with `./target/debug/ssri-server` in a `ssri-server` clone with the patch applied.
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-4.png` (LIVE mode preferred: start server first).
+> 📸 **Execution Proof** (`ssri_server_demo.js`, LIVE mode — 4/4 ✅, probe retry included for flaky RPC):
+>
+> ![ssri-server live terminal proof](./images/foto-4.png)
 
 ## 🚀 Reproduction Guide
 

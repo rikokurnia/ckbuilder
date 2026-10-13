@@ -43,15 +43,26 @@ async function main() {
   console.log(`🖥️ Server: ${SERVER} (start: ./target/debug/ssri-server in ssri-server clone)`);
 
   let live = false;
-  try {
-    const probe = await call(0, "run_script_level_code",
-      [CODE_TX, CODE_INDEX, [methodPath("SSRI.version")]]);
-    if (probe?.result?.content === "0x00") {
-      live = true;
-      console.log(`✅ Server reachable — running 4 LIVE method calls:\n`);
-    } else throw new Error("unexpected probe: " + JSON.stringify(probe).slice(0, 160));
-  } catch (e) {
-    console.log(`⚠️ Server not reachable (${e.message?.slice(0, 100)})`);
+  let lastErr = "";
+  for (let attempt = 1; attempt <= 3 && !live; attempt++) {
+    try {
+      const probe = await call(0, "run_script_level_code",
+        [CODE_TX, CODE_INDEX, [methodPath("SSRI.version")]]);
+      if (probe?.result?.content === "0x00") {
+        live = true;
+        console.log(`✅ Server reachable (attempt ${attempt}) — running 4 LIVE method calls:\n`);
+      } else throw new Error("unexpected probe: " + JSON.stringify(probe).slice(0, 160));
+    } catch (e) {
+      lastErr = e.message?.slice(0, 100) ?? String(e);
+      if (!live && attempt < 3) {
+        console.log(`⏳ Probe attempt ${attempt} failed (${lastErr}) — retrying...`);
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+    }
+  }
+  if (!live) {
+    console.log(`⚠️ Server not reachable after 3 attempts (${lastErr})`);
+    console.log(`   (code 1000 = server-side CKB RPC fetch failed; check network, restart server)`);
     console.log(`   Showing RECORDED transcript from verified local run instead:\n`);
   }
 
