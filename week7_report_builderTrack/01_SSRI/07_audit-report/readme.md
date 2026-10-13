@@ -27,7 +27,9 @@
 
 Executable: [`scripts/audit_digest_demo.js`](./scripts/audit_digest_demo.js) (verifies vendored PDF presence + prints this digest).
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-7.png`.
+> 📸 **Execution Proof** (`audit_digest_demo.js`):
+>
+> ![Audit digest terminal proof](./images/foto-7.png)
 
 ## 🚀 Reproduction Guide
 

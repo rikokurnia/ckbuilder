@@ -43,7 +43,9 @@ Migration `2024-07-20-091011.json` → tx `0x900afcf79235e88f7bdf8a5d320365b7912
 📌 SSRI code cell for module 04: 0x900afcf7...fc51e5c:0
 ```
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-3.png`.
+> 📸 **Execution Proof** (`prototype_walkthrough_demo.js`, deploy tx committed):
+>
+> ![Prototype walkthrough terminal proof](./images/foto-3.png)
 
 Full output: [`scripts/prototype_walkthrough_demo.js`](./scripts/prototype_walkthrough_demo.js).
 

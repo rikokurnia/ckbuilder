@@ -23,7 +23,9 @@ Pausable UDT implements the SDK's `UDT` + `UDTPausable` traits: transfers/mints 
 
 Executable [`scripts/pausable_udt_live_demo.js`](./scripts/pausable_udt_live_demo.js) runs LIVE against the local ssri-server when up, else prints this verified transcript.
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-6.png`.
+> 📸 **Execution Proof** (`pausable_udt_live_demo.js`, LIVE server mode — 4/4 ✅):
+>
+> ![Pausable UDT live terminal proof](./images/foto-6.png)
 
 ## 🛡️ Evidence Boundaries (honest gates)
 

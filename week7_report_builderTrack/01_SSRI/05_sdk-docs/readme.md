@@ -24,7 +24,9 @@ docs.rs renders the rustdoc of the exact tarball verified in module 02. Instead 
 
 Notes: `simulator` module is **feature-gated** (`native-simulator`) and absent from the default build; method tables in doc-comments were excluded from the count (naive grep would false-positive on `unified_dispatch`/`get_methods` examples).
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-5.png`.
+> 📸 **Execution Proof** (`sdk_api_map_demo.js`, vendored source):
+>
+> ![SDK API map terminal proof](./images/foto-5.png)
 
 ## 🚀 Reproduction Guide
 

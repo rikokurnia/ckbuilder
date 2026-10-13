@@ -41,7 +41,9 @@ Signature -> method_path (u64 LE hex) | check
 ✅ Known-vector check PASSED
 ```
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-1.png`.
+> 📸 **Execution Proof** (`ssri_method_path_demo.js`, known vector ✅):
+>
+> ![Method path terminal proof](./images/foto-1.png)
 
 These exact paths are cross-verified against live chain data in [04_ssri-server](../04_ssri-server/readme.md) (all 8 appear in the prototype's `get_methods` output).
 

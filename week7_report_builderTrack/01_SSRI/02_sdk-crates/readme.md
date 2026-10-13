@@ -40,7 +40,9 @@ Executable: [`scripts/crate_inventory_demo.js`](./scripts/crate_inventory_demo.j
 🏁 Week7-02 Crate Inventory Complete!
 ```
 
-> 📸 **Execution Proof**: save terminal capture as `images/foto-2.png`.
+> 📸 **Execution Proof** (`crate_inventory_demo.js`, live crates.io API):
+>
+> ![Crate inventory terminal proof](./images/foto-2.png)
 
 The tarball verified here is vendored byte-identical for module 05 (`05_sdk-docs/vendor/ckb-ssri-std-0.0.1/`).
 
