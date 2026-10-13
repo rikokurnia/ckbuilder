@@ -21,8 +21,6 @@ Two honest findings: (1) all four deployment entries pass format checks and main
 
 ![Deployments Execution Proof](./images/foto-3.png)
 
-> Save terminal capture as `03_resources-deployments/images/foto-3.png` (run script below, screenshot).
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

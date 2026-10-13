@@ -21,8 +21,6 @@ Beyond that: blockchain-enhanced validation (CKB txs replace the CSV process, in
 
 ![Light Paper Execution Proof](./images/foto-2.png)
 
-> Save terminal capture as `02_light-paper/images/foto-2.png` (run script below, screenshot).
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

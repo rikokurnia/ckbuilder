@@ -42,8 +42,6 @@ BTC-testnet liveness shown free via `mempool.space` (tip `#5,158,528`, 1 sat/vB)
 
 ![RGB++ Verify Execution Proof](./images/foto-5.png)
 
-> Save terminal capture as `05_onchain-practice/images/foto-5.png` (run verify below, screenshot). Mint capture optional as `foto-5b.png`.
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

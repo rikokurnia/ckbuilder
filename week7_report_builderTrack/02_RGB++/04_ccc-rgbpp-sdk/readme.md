@@ -21,8 +21,6 @@ UDT ops mapped as code shapes: **issue** (546-sat seal → partial CKB tx → PS
 
 ![CCC SDK Execution Proof](./images/foto-4.png)
 
-> Save terminal capture as `04_ccc-rgbpp-sdk/images/foto-4.png` (run script below, screenshot).
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution

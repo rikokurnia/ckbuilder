@@ -21,8 +21,6 @@ This module proves the commitment math offline (compute → re-verify → tamper
 
 ![RGB++ Intro Execution Proof](./images/foto-1.png)
 
-> Save terminal capture as `01_rgbpp-introduction/images/foto-1.png` (run script below, screenshot).
-
 ---
 
 ## ⚙️ Step-by-Step Practical Execution
