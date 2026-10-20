@@ -1,0 +1,18 @@
+{
+  "name": "ickb-week8-report",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Week 8 iCKB module: whitepaper, contracts, audit, current SDK, live testnet verification",
+  "scripts": {
+    "01": "node 01_whitepaper/scripts/ickb_whitepaper_demo.js",
+    "02": "node 02_github-repository/scripts/ickb_repo_demo.js",
+    "03": "node 03_audit-report/scripts/ickb_audit_demo.js",
+    "04": "node 04_ickb-sdk/scripts/ickb_sdk_demo.mjs",
+    "verify": "node 05_deep-dive/scripts/ickb_verify.js",
+    "05:dry": "node 05_deep-dive/scripts/ickb_live_deposit.mjs --dry-run"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "1.23.0"
+  }
+}

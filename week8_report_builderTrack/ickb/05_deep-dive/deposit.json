@@ -1,0 +1,30 @@
+{
+  "network": "testnet",
+  "address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr",
+  "depositCapacity": "108200000000",
+  "phase1": {
+    "txHash": "0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371",
+    "blockNumber": "22804094",
+    "depositOutPoint": {
+      "txHash": "0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371",
+      "index": 0
+    },
+    "receiptOutPoint": {
+      "txHash": "0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371",
+      "index": 1
+    },
+    "receiptQuantity": 1,
+    "depositAmount": "100000000000",
+    "headerDaoAr": "11936599498468556"
+  },
+  "phase2": {
+    "txHash": "0x4dd5c139ade7638a6bac605e64b652a512fc8b9188c9fa3d5e5d9762d41aa08e",
+    "blockNumber": "22804097",
+    "ickbOutPoint": {
+      "txHash": "0x4dd5c139ade7638a6bac605e64b652a512fc8b9188c9fa3d5e5d9762d41aa08e",
+      "index": 0
+    },
+    "ickbAmount": "83775953120"
+  },
+  "createdAt": "2026-10-20T12:28:33.347Z"
+}
