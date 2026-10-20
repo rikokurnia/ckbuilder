@@ -1,0 +1,27 @@
+
+== transfer ==
+holder:       ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqggjjhws2lk0exju5zumertf7kyjpr4v8c7gm2aa
+holder hash:  0xbc9173ac65a3c3b1b38d2b0d4bf27ecb2e4f38053dfb47009589a81b43de042b
+third party:  ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr
+amount:       1200 units
+cap:          1000 units
+expect:       REJECT
+live cells:   2
+  0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742:0  500 units  320 CKB
+  0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742:1  1500 units  320 CKB
+
+selected:     0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742:1 (1500 units)
+remaining:    300 units
+
+== balancing ==
+inputs:  2
+outputs: 3
+fee:     0.00001583 CKB
+first input is the xUDT cell: true
+owner input present: false (holder pays the fee)
+
+== broadcast ==
+rejected as expected
+Client request error TransactionFailedToVerify: Verification failed Script(TransactionScriptError { source: Inputs[0].Type, cause: ValidationFailure: see error code -104 on page https://nervosnetwork.github.io/ckb-script-error-codes/by-type-hash/25c29dc317811a6f6f3985a7a9ebc4838bd388d19d0feeecf0bcd60f6c0975bb.html#-104 })
+
+RESULT: FAIL (cap enforced)

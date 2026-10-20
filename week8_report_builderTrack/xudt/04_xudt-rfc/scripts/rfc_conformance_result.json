@@ -1,0 +1,104 @@
+{
+  "checkedAt": "2026-10-20T13:45:59.912Z",
+  "network": "testnet",
+  "tokenTypeHash": "0x82850594aee0634a38f38793f5c0c2d9552b91adb7f6b8fded6fe7c3c1cfc978",
+  "extensionTx": "0x2d3acfa6a97ffc84221fb43ec8f48b841f08dd6d5503800d0f091a76cc6517d8",
+  "mintTx": "0xfa37c1187695ba0fe55a5e3d0078662ba2c4f5256a3fff8785da758842554573",
+  "transferTx": "0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742",
+  "mintExplorer": "https://pudge.explorer.nervos.org/transaction/0xfa37c1187695ba0fe55a5e3d0078662ba2c4f5256a3fff8785da758842554573",
+  "transferExplorer": "https://pudge.explorer.nervos.org/transaction/0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742",
+  "rows": [
+    {
+      "id": "RFC-1",
+      "clause": "Cell data begins with uint128 little-endian amount",
+      "expected": "2000 / 500 / 1500 decoded from 16-byte prefixes",
+      "actual": "mint=[2000] transfer=[500, 1500]",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-2",
+      "clause": "type.args = 32-byte owner lock hash + args",
+      "expected": "0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f",
+      "actual": "0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-3",
+      "clause": "flags & 0x1FFFFFFF = 1 selects raw ScriptVec in args",
+      "expected": "1",
+      "actual": "1",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-4",
+      "clause": "ScriptVec decodes to one extension script",
+      "expected": "1 entry, code_hash=0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd, hash_type=data1",
+      "actual": "1 entry, code_hash=0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd, hash_type=data1",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-5",
+      "clause": "Extension cell data hashes to the data1 code hash",
+      "expected": "0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd",
+      "actual": "0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-6",
+      "clause": "Owner mode via owner-lock input authorizes issuance",
+      "expected": "mint has owner input 0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f",
+      "actual": "owner input present=true, minted=2000",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-7",
+      "clause": "Non-owner transfer preserves supply and invokes extension cap",
+      "expected": "500 owner + 1500 holder, no owner input",
+      "actual": "500 + 1500; no owner input=true; locks=0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f, 0xbc9173ac65a3c3b1b38d2b0d4bf27ecb2e4f38053dfb47009589a81b43de042b",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-8",
+      "clause": "1200-unit transfer exceeds cap 1000 and is rejected",
+      "expected": "CKB error -104",
+      "actual": "error code -104 observed",
+      "verdict": "PASS"
+    },
+    {
+      "id": "RFC-9",
+      "clause": "P2SH mode: flags=2, blake160(ScriptVec) in args, ScriptVec in witness",
+      "expected": "not exercised",
+      "actual": "only flags=1 raw ScriptVec is implemented in this report",
+      "verdict": "DEFERRED"
+    },
+    {
+      "id": "RFC-10",
+      "clause": "Multiple extensions and per-extension XudtData",
+      "expected": "not exercised",
+      "actual": "one extension, no XudtData payload",
+      "verdict": "DEFERRED"
+    },
+    {
+      "id": "RFC-11",
+      "clause": "owner_script + owner_signature witness path",
+      "expected": "not exercised",
+      "actual": "owner mode used an owner-lock input",
+      "verdict": "DEFERRED"
+    },
+    {
+      "id": "RFC-12",
+      "clause": "Optional owner-mode bits 0x20000000 / 0x40000000 / 0x80000000",
+      "expected": "not exercised",
+      "actual": "flags use only bit 0 (0x1)",
+      "verdict": "DEFERRED"
+    },
+    {
+      "id": "RFC-13",
+      "clause": "Mainnet deployment",
+      "expected": "not exercised",
+      "actual": "testnet (Pudge) only",
+      "verdict": "DEFERRED"
+    }
+  ],
+  "failures": 0
+}

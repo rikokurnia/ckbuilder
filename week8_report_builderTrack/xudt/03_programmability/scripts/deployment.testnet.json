@@ -1,0 +1,41 @@
+{
+  "network": "testnet",
+  "rpc": "https://testnet.ckb.dev/rpc",
+  "extension": {
+    "codeHash": "0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd",
+    "hashType": "data1",
+    "outPoint": {
+      "txHash": "0x2d3acfa6a97ffc84221fb43ec8f48b841f08dd6d5503800d0f091a76cc6517d8",
+      "index": 0
+    },
+    "capacity": "362900000000",
+    "binaryFile": "transfer_cap.so",
+    "binaryBytes": 3568,
+    "binarySha256": "aa529c9ee859abfd8250d4466620fffc2200e29d276d7656159cebece0a2f599",
+    "deployTx": "0x2d3acfa6a97ffc84221fb43ec8f48b841f08dd6d5503800d0f091a76cc6517d8",
+    "blockNumber": 22804184,
+    "ownerLockHash": "0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f"
+  },
+  "token": {
+    "typeArgs": "0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f010000004d0000000800000045000000100000003000000031000000850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd0210000000e8030000000000000000000000000000",
+    "typeHash": "0x82850594aee0634a38f38793f5c0c2d9552b91adb7f6b8fded6fe7c3c1cfc978",
+    "amount": "2000",
+    "mintTx": "0xfa37c1187695ba0fe55a5e3d0078662ba2c4f5256a3fff8785da758842554573",
+    "blockNumber": 22804188,
+    "holderAddress": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqggjjhws2lk0exju5zumertf7kyjpr4v8c7gm2aa",
+    "holderLockHash": "0xbc9173ac65a3c3b1b38d2b0d4bf27ecb2e4f38053dfb47009589a81b43de042b",
+    "ownerLockHash": "0xcd61c3a7ef0ec6542b7833d62317039a0490297bda58e01e8d28943139bcbb0f",
+    "extensionCodeHash": "0x850564e93170669357324244c8381a6bef09be3e86b854609bc4a1a8baa08dbd",
+    "cap": "1000"
+  },
+  "transfers": [
+    {
+      "txHash": "0xfff23bd1deba7eb5565117f7da40ac643b47f8d6e331a661a2ffe67b2ed73742",
+      "blockNumber": 22804194,
+      "from": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqggjjhws2lk0exju5zumertf7kyjpr4v8c7gm2aa",
+      "to": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqwy0rpn3trq0sj2q6arv7xaq9w6m6xa0egxe8xvr",
+      "amount": "500",
+      "change": "1500"
+    }
+  ]
+}

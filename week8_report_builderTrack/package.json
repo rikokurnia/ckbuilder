@@ -1,0 +1,10 @@
+{
+  "name": "week8-report-buildertrack",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Week 8 Builder Track report - xUDT module",
+  "dependencies": {
+    "@ckb-ccc/core": "^1.23.0"
+  },
+  "type": "module"
+}
