@@ -1,31 +1,63 @@
-# Week 8 Builder Track Master Report: xUDT
+# Week 8 Builder Track Master Report: iCKB + xUDT
 
 **Name Builder**: Riko Kurnia Sandi  
 **Date**: 20 October 2026  
-**Track**: CKB Builder Track (Phase 3: Advanced - xUDT)
+**Track**: CKB Builder Track (Phase 3: Advanced - iCKB + xUDT)
 
 ---
 
 ## Executive Summary
 
-This report covers the **xUDT** Handbook block end to end: the data model, the validation lifecycle, a working C extension, and a live testnet demonstration of that extension enforcing a transfer cap.
+This master report synthesizes the research, engineering, and live verification completed during **Week 8** of the Nervos CKB Builder Track. It completes **two** Handbook Advanced blocks in parallel, each ending with a real committed transaction on Pudge testnet.
 
-The central result is not a diagram of xUDT. It is a **real extension code cell** loaded by the deployed xUDT script through `ckb_dlopen2`, plus three on-chain outcomes:
+### Part 1 — iCKB (liquid Nervos DAO staking)
 
-1. **Owner mint**: 2,000 units issued to a holder lock.
-2. **Allowed transfer**: 500 units moved from the holder to a third party, leaving 1,500 units as change.
-3. **Rejected transfer**: a 1,200-unit transfer, above the 1,000-unit cap, was rejected by CKB-VM with **error code `-104`**.
+iCKB turns a Nervos DAO deposit into a liquid, transferable token. The deposit still earns DAO interest; the receipt and the iCKB token make it usable before the 180-epoch unlock ([module report](./ickb/readme.md)):
 
-The engineering work also produced two reusable findings about the CKB extension loader:
+1. **Whitepaper**: the lifecycle re-derived offline, 6/6 — `1,082 CKB` → `1,000 CKB` free → `837.19 iCKB` at the snapshot ratio, exit after 180 epochs, 2% oversized-deposit fee.
+2. **Repositories**: three maintained repos (`whitepaper`, `contracts`, `stack`) pinned to real commits (`3e0ffbd`, `c951927`, `9582ab4`); five script hashes checked against `constants.ts`.
+3. **Audit**: ScaleBit 2024 (3 findings, none medium+) plus a 2026 executable review of the same commit — **LO-01 is still live** (limit-order confusion can strand orders; no principal theft).
+4. **SDK**: `ickb/stack/sdk` vendored at `9582ab4` (not on npm); live read of testnet: contract code hashes MATCH, 8-member dep group, pool `380` deposits, ratio `1.1944796`.
+5. **Deep dive**: real spend — [deposit `0x631c8b4a…`](https://pudge.explorer.nervos.org/transaction/0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371) at block `#22,804,094` and [mint `0x4dd5c139…`](https://pudge.explorer.nervos.org/transaction/0x4dd5c139ade7638a6bac605e64b652a512fc8b9188c9fa3d5e5d9762d41aa08e) at block `#22,804,097`, **17/17** independent verifier checks.
+
+The live anchor: a `1,082 CKB` deposit cell (still live), the receipt consumed, **`837.7595312 iCKB`** minted at header AR `11,936,599,498,468,556`.
+
+### Part 2 — xUDT (extendable UDT)
+
+xUDT keeps sUDT's `amount` + owner-lock-compatible type args and appends a `ScriptVec` of extension code cells that run inside the same validation loop ([module report](./xudt/readme.md)):
+
+1. **Data model**: a live 21,000,000-unit legacy xUDT cell decoded (32-byte owner + `flags=0`), side by side with the new 113-byte extension args (owner + flags + one `ScriptVec` entry).
+2. **Validation lifecycle**: owner mode, supply conservation, then extensions — reproduced as a decision matrix and cross-checked against the exact order in the upstream `xudt_rce.c`.
+3. **Programmability**: a custom extension written in C (`transfer_cap.c`: cap the sum of non-sender group outputs, owner mode always bypasses), compiled as an `ET_DYN` `.so`, deployed as a code cell, and executed live by the deployed xUDT script through `ckb_dlopen2`.
+4. **Live outcomes**: owner mint of 2,000 units (`0xfa37c118…`), a 500-unit transfer accepted (`0xfff23bd1…`), and a 1,200-unit transfer rejected by CKB-VM with **`-104`** from `Inputs[0].Type`.
+5. **RFC conformance**: `rfc_conformance_check.js` re-derives the executed RFC-0052 clauses from chain state: **8 PASS, 5 DEFERRED, 0 FAIL**.
+
+The engineering work also produced two reusable findings about the CKB extension loader, all five deployment attempts pinned as committed cells (full timeline in module 03):
 
 - A static `ET_EXEC` has no `.dynsym` / `.dynstr`, so `ckb_dlopen2` rejects it with `-22` (`ERROR_INVALID_ELF`). The extension must be a dynamic `ET_DYN` object.
-- The executable `PT_LOAD` must start on a page boundary. LLD's default shared-library layout placed `.text` in a separate RX segment at `p_offset=0x23a`, `p_vaddr=0x123a`; the loaded symbol landed in zeroed memory and CKB-VM raised `InvalidInstruction`. Linking with `--no-rosegment` (and `-z norelro`) merged headers, `.dynsym`, `.dynstr`, and `.text` into one RX `PT_LOAD` at offset `0` / vaddr `0`, which the loader handles correctly.
+- The executable `PT_LOAD` must start on a page boundary. LLD's default shared-library layout placed `.text` in a separate RX segment at `p_offset=0x23a`, `p_vaddr=0x123a`; the loaded symbol landed in zeroed memory and CKB-VM raised `InvalidInstruction`. Linking with `--no-rosegment` (and `-z norelro`) merges headers, `.dynsym`, `.dynstr`, and `.text` into one RX `PT_LOAD` at offset `0` / vaddr `0`, which the loader handles correctly.
 
-All claims below are testnet-only. The RFC conformance script reports **8 executed checks passing and 5 explicitly deferred**.
+The final build is bit-reproducible: a fresh `./build.sh` produces a `transfer_cap.so` byte-identical to the live code cell.
+
+All claims below are testnet-only.
 
 ---
 
 ## Module Reports
+
+### iCKB
+
+| # | Sub-module | Question it answers | Main evidence |
+|---|---|---|---|
+| 01 | [Whitepaper](./ickb/01_whitepaper/readme.md) | How does the two-phase mint work? | `ickb_whitepaper_demo.js` — 6/6 offline lifecycle math |
+| 02 | [GitHub repository](./ickb/02_github-repository/readme.md) | Which code is the source of truth? | Three repos pinned; 5 script hashes vs `constants.ts` — 6/6 |
+| 03 | [Audit report](./ickb/03_audit-report/readme.md) | What can go wrong? | ScaleBit 2024 + 2026 review: LO-01 still live — 8/8 |
+| 04 | [iCKB SDK](./ickb/04_ickb-sdk/readme.md) | Is the deployed system what the source says? | Vendored SDK reads testnet live — 8/8 |
+| 05 | [Deep dive](./ickb/05_deep-dive/readme.md) | Does the two-phase mint actually work on chain? | Deposit + mint txs committed; `ickb_verify.js` — 17/17 |
+
+Module index: [ickb/readme.md](./ickb/readme.md).
+
+### xUDT
 
 | # | Sub-module | Question it answers | Main evidence |
 |---|---|---|---|
@@ -42,6 +74,21 @@ Module index: [xudt/readme.md](./xudt/readme.md).
 
 Network: **Pudge testnet** (`https://testnet.ckb.dev/rpc`)  
 Explorer: `https://pudge.explorer.nervos.org`
+
+### iCKB
+
+| Artifact | Value |
+|---|---|
+| Phase 1 deposit tx | [`0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371`](https://pudge.explorer.nervos.org/transaction/0x631c8b4ae65aa456006472e526b89c0047869e8e40fdbfa331d8621dd6d05371) |
+| Phase 1 block | `22804094` |
+| Phase 1 proof | `1,082 CKB` DAO deposit cell + `208 CKB` receipt (`quantity=1`, `deposit=1,000 CKB`) |
+| Phase 2 mint tx | [`0x4dd5c139ade7638a6bac605e64b652a512fc8b9188c9fa3d5e5d9762d41aa08e`](https://pudge.explorer.nervos.org/transaction/0x4dd5c139ade7638a6bac605e64b652a512fc8b9188c9fa3d5e5d9762d41aa08e) |
+| Phase 2 block | `22804097` |
+| Phase 2 proof | receipt consumed, `837.7595312 iCKB` minted at header AR `11,936,599,498,468,556` |
+| SDK vendored at | `9582ab4` (`ickb/lib/ickb-sdk/` + `PROVENANCE.md`) |
+| Verifier | `ickb_verify.js` — 17/17 checks pass |
+
+### xUDT
 
 | Artifact | Value |
 |---|---|
@@ -69,17 +116,21 @@ Five extension code cells were deployed while the loader behaviour was pinned do
 | 4 | probe, `--no-rosegment` | 22804173 | `0x8e300163...` | Success (probe token) |
 | 5 | `transfer_cap.so` | 22804184 | `0x850564e9...` | Success (final token) |
 
-The earlier **loader probe** (a no-syscall extension) is also live and documented in module 03:
-
-| Probe artifact | Value |
-|---|---|
-| Probe deploy tx | [`0xc5a3062d0ded3fdb7b0dab66b0efb16045679fc4c99a5eded9ce03a554187619`](https://pudge.explorer.nervos.org/transaction/0xc5a3062d0ded3fdb7b0dab66b0efb16045679fc4c99a5eded9ce03a554187619) |
-| Probe block | `22804173` |
-| Probe code hash | `0x8e300163646c02e22060d2292cc17161ed74c7f2a5756db56e1d7e79a614e7b7` |
-
 ---
 
 ## Verification Matrix
+
+### iCKB
+
+| Sub-module | Core primitive | Executed check | Result |
+|---|---|---|---|
+| 01 Whitepaper | Two-phase mint lifecycle | `ckbValue x 10^16 / AR`, 180-epoch maturity, 2% fee | PASS (offline model) |
+| 02 Repositories | Pinned heads, script hashes | 3 repos, 5 hashes vs `constants.ts` | PASS (6/6) |
+| 03 Audit | Findings reconciliation | ScaleBit 2024 + 2026 review, LO-01 reproduce condition | PASS (8/8) |
+| 04 SDK | Deployed identity | Code hashes MATCH, dep group, pool, ratio | PASS (8/8, live read) |
+| 05 Deep dive | Two-phase spend | Deposit + receipt + mint recomputed on chain | PASS (17/17, live) |
+
+### xUDT
 
 | Sub-module | Core primitive | Executed check | Result |
 |---|---|---|---|
@@ -89,11 +140,27 @@ The earlier **loader probe** (a no-syscall extension) is also live and documente
 | 03 Programmability | Cap enforcement | 500 accepted; 1,200 rejected with `-104` | PASS (live) |
 | 04 RFC | Data/args/flags/ScriptVec/code hash | `rfc_conformance_check.js` | 8 PASS, 5 DEFERRED, 0 FAIL |
 
-`02` is deliberately labelled an **offline model**: it mirrors the C rule but does not execute CKB-VM. The live proof for the same rule is in `03`.
+The two "offline model" rows (iCKB 01, xUDT 02) mirror the on-chain rule but do not execute CKB-VM; the live proof for both is in the respective sub-module 05 / 03.
 
 ---
 
 ## Evidence Boundaries
+
+### iCKB
+
+| Capability | Evidence in this report | Status |
+|---|---|---|
+| Whitepaper lifecycle math | Offline model, 6/6, including 180-epoch maturity and the 2% oversize fee | Proven |
+| Repository state | Heads pinned: whitepaper `3e0ffbd`, contracts `c951927`, stack `9582ab4` | Proven |
+| Audit | ScaleBit 2024 PDF + 2026 markdown vendored with SHA-256; LO-01 still live | Proven |
+| Deployed identity | xUDT `0x50bd…` and Logic `0x2a81…` MATCH live cell data; 8-member dep group | Proven |
+| SDK read | Testnet pool `380` deposits (`10` ready), `19` orders, ratio `1.1944796` | Proven |
+| Direct deposit + mint | Two committed txs, 17/17 verifier checks | Proven |
+| Withdrawal after 180 epochs | Documented in 01, not spent (locks funds ~30 days) | Deferred |
+| Order book / instant exit | Read only in 04, not traded | Deferred |
+| Mainnet | Not exercised | Deferred |
+
+### xUDT
 
 | Capability | Evidence in this report | Status |
 |---|---|---|
@@ -119,30 +186,57 @@ No local `ckb-debugger` or Docker was available. Every execution claim above com
 ```text
 week8_report_builderTrack/
 ├── package.json
-├── readme.md                         # this master report
+├── readme.md                             # this master report
+├── ickb/
+│   ├── package.json
+│   ├── readme.md                         # iCKB module report
+│   ├── lib/ickb-sdk/                     # vendored stack/sdk @ 9582ab4 + LICENSE + PROVENANCE
+│   ├── 01_whitepaper/
+│   │   ├── readme.md
+│   │   ├── scripts/ickb_whitepaper_demo.js
+│   │   └── images/                       # screenshot slots
+│   ├── 02_github-repository/
+│   │   ├── readme.md
+│   │   ├── scripts/ickb_repo_demo.js
+│   │   └── images/
+│   ├── 03_audit-report/
+│   │   ├── readme.md
+│   │   ├── scripts/ickb_audit_demo.js
+│   │   ├── evidence/                     # ScaleBit 2024 PDF + 2026 markdown, vendored
+│   │   └── images/
+│   ├── 04_ickb-sdk/
+│   │   ├── readme.md
+│   │   ├── scripts/ickb_sdk_demo.mjs
+│   │   └── images/
+│   └── 05_deep-dive/
+│       ├── readme.md
+│       ├── scripts/ickb_live_deposit.mjs # phase 1 + phase 2 spend
+│       ├── scripts/ickb_verify.js        # 17-check verifier
+│       ├── deposit.json                  # live deposit state
+│       └── images/
 └── xudt/
-    ├── readme.md                     # xUDT module report
-    ├── scripts/common.mjs            # shared CCC + RPC + encoding helpers
+    ├── readme.md                         # xUDT module report
+    ├── scripts/common.mjs                # shared CCC + RPC + encoding helpers
     ├── 01_introduction/
     │   ├── readme.md
     │   ├── scripts/xudt_layout_demo.js
-    │   └── images/                   # screenshot slots
+    │   └── images/
     ├── 02_how-xudt-works/
     │   ├── readme.md
     │   ├── scripts/xudt_validation_trace.js
     │   └── images/
     ├── 03_programmability/
     │   ├── readme.md
-    │   ├── vendor/ckb-c-stdlib/      # vendored headers + license
+    │   ├── vendor/ckb-c-stdlib/          # vendored headers + license
     │   └── scripts/
-    │       ├── transfer_cap.c        # extension source
-    │       ├── build.sh              # RISC-V build
-    │       ├── deploy_extension.mjs  # deploy code cell
-    │       ├── issue_xudt.mjs        # owner mint
-    │       ├── transfer_xudt.mjs     # transfer / --expect-reject
-    │       ├── probe.c               # loader probe (no syscalls)
+    │       ├── transfer_cap.c            # extension source
+    │       ├── build.sh                  # RISC-V build
+    │       ├── deploy_extension.mjs      # deploy code cell
+    │       ├── issue_xudt.mjs            # owner mint
+    │       ├── transfer_xudt.mjs         # transfer / --expect-reject
+    │       ├── probe.c                   # loader probe (no syscalls)
     │       ├── deployment.testnet.json
-    │       └── transfer_cap.so       # deployed artifact
+    │       └── transfer_cap.so           # deployed artifact
     └── 04_xudt-rfc/
         ├── readme.md
         └── scripts/
@@ -157,7 +251,25 @@ week8_report_builderTrack/
 
 ```bash
 cd week8_report_builderTrack
-npm install
+
+# ===== iCKB =====
+cd ickb && npm install
+
+# Offline / repository / audit
+npm run 01
+npm run 02
+npm run 03
+
+# Live read-only (deployment, pool, ratio)
+npm run 04
+
+# Live deposit pair — build first, then spend, then verify
+node 05_deep-dive/scripts/ickb_live_deposit.mjs --dry-run
+# node 05_deep-dive/scripts/ickb_live_deposit.mjs   # spends real testnet CKB
+npm run verify
+
+# ===== xUDT =====
+cd .. && npm install
 
 # 01: read live cells and decode xUDT layout
 node xudt/01_introduction/scripts/xudt_layout_demo.js
@@ -183,7 +295,7 @@ cd ../..
 node xudt/04_xudt-rfc/scripts/rfc_conformance_check.js
 ```
 
-The deploy/mint/transfer commands are commented out in the block above because they spend testnet capacity. The existing `deployment.testnet.json` records the artifacts already produced.
+The live-spending commands are commented out because they consume testnet capacity. `deployment.testnet.json` records the xUDT artifacts already produced, and `ickb/05_deep-dive/deposit.json` records the iCKB deposit pair. `01`–`04` of every module are safe to re-run at any time.
 
 ---
 
@@ -191,19 +303,36 @@ The deploy/mint/transfer commands are commented out in the block above because t
 
 The readmes reference `images/foto-N.png` slots. Capture them from a real terminal/browser session; no image is claimed before the file exists.
 
+### iCKB
+
 | Slot | Suggested capture |
 |---|---|
-| `01_introduction/images/foto-1.png` | Terminal output of `xudt_layout_demo.js`, especially the amount/args decode |
-| `02_how-xudt-works/images/foto-2.png` | Terminal output of `xudt_validation_trace.js`, especially the 5-row matrix |
-| `03_programmability/images/foto-3.png` | `./build.sh` output plus `readelf -lW transfer_cap.so` showing the RX LOAD at offset 0 |
-| `03_programmability/images/foto-4.png` | Deploy output with code hash and tx `0x2d3a...` |
-| `03_programmability/images/foto-5.png` | Mint output with token cell and tx `0xfa37...` |
-| `03_programmability/images/foto-6.png` | Allowed transfer output, 500 / 1,500, tx `0xfff2...` |
-| `03_programmability/images/foto-7.png` | Over-cap rejection showing `-104` |
-| `04_xudt-rfc/images/foto-8.png` | `rfc_conformance_check.js` summary and JSON |
+| `ickb/01_whitepaper/images/foto-1.png` | `npm run 01` — lifecycle math, 6/6 checks |
+| `ickb/02_github-repository/images/foto-2.png` | `npm run 02` — pinned repos and script-hash matches |
+| `ickb/03_audit-report/images/foto-3.png` | `npm run 03` — audit findings and LO-01 status |
+| `ickb/04_ickb-sdk/images/foto-4.png` | `npm run 04` — live pool, ratio, code-hash MATCH |
+| `ickb/05_deep-dive/images/foto-1.png` | `npm run verify` — deposit + mint pair, 17/17 |
+
+### xUDT
+
+| Slot | Suggested capture |
+|---|---|
+| `xudt/01_introduction/images/foto-1.png` | Terminal output of `xudt_layout_demo.js`, especially the amount/args decode |
+| `xudt/02_how-xudt-works/images/foto-2.png` | Terminal output of `xudt_validation_trace.js`, especially the 5-row matrix |
+| `xudt/03_programmability/images/foto-3.png` | `./build.sh` output plus `readelf -lW transfer_cap.so` showing the RX LOAD at offset 0 |
+| `xudt/03_programmability/images/foto-4.png` | Deploy output with code hash and tx `0x2d3a...` |
+| `xudt/03_programmability/images/foto-5.png` | Mint output with token cell and tx `0xfa37...` |
+| `xudt/03_programmability/images/foto-6.png` | Allowed transfer output, 500 / 1,500, tx `0xfff2...` |
+| `xudt/03_programmability/images/foto-7.png` | Over-cap rejection showing `-104` |
+| `xudt/04_xudt-rfc/images/foto-8.png` | `rfc_conformance_check.js` summary and JSON |
 
 ---
 
 ## Next
 
-The xUDT block is functionally complete on testnet. The remaining work is evidence packaging: capture the eight screenshots, then submit. Follow-on work would be the deferred RFC surfaces: `flags=2` P2SH extensions, multiple extensions with `XudtData`, and the owner-signature path.
+Both blocks are functionally complete on testnet. Remaining work is evidence packaging: capture the thirteen screenshots, then submit.
+
+Follow-on work, by module:
+
+- **iCKB**: the honest gap is the exit — iCKB → receipt → DAO withdrawal request → 180 epochs → CKB. The timing and claim-epoch math are proven in `01`; executing it would lock funds for ~30 days, so it is documented, not spent. The order-book path and instant exit are read only.
+- **xUDT**: the deferred RFC surfaces — `flags=2` P2SH extensions, multiple extensions with `XudtData`, the owner-signature path, and mainnet.
